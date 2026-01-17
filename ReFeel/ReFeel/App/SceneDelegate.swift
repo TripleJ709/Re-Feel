@@ -16,7 +16,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = UINavigationController(rootViewController: HomeViewController())
+        
+        let repository = EmotionRepository()
+        let homeViewModel = HomeViewModel(repository: repository)
+        let homeViewController = HomeViewController(viewModel: homeViewModel)
+        
+        window.rootViewController = UINavigationController(rootViewController: homeViewController)
         self.window = window
         window.makeKeyAndVisible()
     }

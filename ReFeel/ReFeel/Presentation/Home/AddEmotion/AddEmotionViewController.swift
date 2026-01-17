@@ -6,32 +6,39 @@
 //
 
 import UIKit
+import Combine
 
 final class AddEmotionViewController: UIViewController {
+    private let viewModel: AddEmotionViewModel
+    private let addView = AddEmotionView()
+    private var cancellables = Set<AnyCancellable>()
     
-    var onEmotionAdded: ((Emotion) -> Void)?
+    init(viewModel: AddEmotionViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
-    let testButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("저장하기", for: .normal)
-        return button
-    }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        view = addView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray5
-        title = "Re:Feel - Add emotion"
-        
-        view.addSubview(testButton)
-        testButton.translatesAutoresizingMaskIntoConstraints = false
-        testButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        testButton.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        testButton.addTarget(self, action: #selector(saveButtonTapped), for: .touchUpInside)
+        title = "Re:Feel - addView"
+        setupAction()
     }
     
-    @objc func saveButtonTapped() {
-        let emotion = Emotion(id: UUID(), content: "새로 추가된 감정", createdAt: Date())
-        onEmotionAdded?(emotion)
+    private func setupAction() {
+        addView.saveButton.addTarget(self, action: #selector(saveBtnTapped), for: .touchUpInside)
+    }
+    
+    @objc private func saveBtnTapped() {
+        viewModel.text = addView.emotionTextView.text
+        viewModel.saveEmotion()
         navigationController?.popViewController(animated: true)
     }
 }

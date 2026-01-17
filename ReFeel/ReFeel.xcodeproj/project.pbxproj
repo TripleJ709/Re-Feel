@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		893288F82F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */; };
+		893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288F92F1B6DB600D216C9 /* EmotionRepository.swift */; };
+		893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */; };
+		893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FD2F1B721D00D216C9 /* HomeView.swift */; };
+		897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22622F1B84EB00EFF62E /* AddEmotionView.swift */; };
+		897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */; };
 		897E47AB2F1A0E4300873F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 897E47A22F1A0E4300873F31 /* Assets.xcassets */; };
 		897E47AD2F1A0E4300873F31 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 897E47A52F1A0E4300873F31 /* LaunchScreen.storyboard */; };
 		897E47AE2F1A0E4300873F31 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 897E47A72F1A0E4300873F31 /* Main.storyboard */; };
@@ -15,11 +21,17 @@
 		897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C02F1A10B600873F31 /* HomeViewController.swift */; };
 		897E47C62F1A157C00873F31 /* AddEmotionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C52F1A157C00873F31 /* AddEmotionViewController.swift */; };
 		897E47C82F1A166A00873F31 /* Emotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C72F1A166A00873F31 /* Emotion.swift */; };
-		897E47CA2F1A180C00873F31 /* EmotionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C92F1A180C00873F31 /* EmotionCell.swift */; };
+		897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */; };
 		897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionRepositoryProtocol.swift; sourceTree = "<group>"; };
+		893288F92F1B6DB600D216C9 /* EmotionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionRepository.swift; sourceTree = "<group>"; };
+		893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		893288FD2F1B721D00D216C9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		897D22622F1B84EB00EFF62E /* AddEmotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionView.swift; sourceTree = "<group>"; };
+		897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionViewModel.swift; sourceTree = "<group>"; };
 		897E47892F19F93100873F31 /* ReFeel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReFeel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		897E47A22F1A0E4300873F31 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		897E47A32F1A0E4300873F31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -30,7 +42,7 @@
 		897E47C02F1A10B600873F31 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		897E47C52F1A157C00873F31 /* AddEmotionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionViewController.swift; sourceTree = "<group>"; };
 		897E47C72F1A166A00873F31 /* Emotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emotion.swift; sourceTree = "<group>"; };
-		897E47C92F1A180C00873F31 /* EmotionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionCell.swift; sourceTree = "<group>"; };
+		897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmotionCell.swift; sourceTree = "<group>"; };
 		897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -45,6 +57,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		893288F62F1B6D2D00D216C9 /* Emotion */ = {
+			isa = PBXGroup;
+			children = (
+				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
+				893288F92F1B6DB600D216C9 /* EmotionRepository.swift */,
+			);
+			path = Emotion;
+			sourceTree = "<group>";
+		};
 		897E47802F19F93100873F31 = {
 			isa = PBXGroup;
 			children = (
@@ -115,6 +136,7 @@
 		897E47BC2F1A0F1800873F31 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				893288F62F1B6D2D00D216C9 /* Emotion */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -129,7 +151,9 @@
 		897E47BF2F1A101500873F31 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				897E47C92F1A180C00873F31 /* EmotionCell.swift */,
+				897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */,
+				893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */,
+				893288FD2F1B721D00D216C9 /* HomeView.swift */,
 				897E47C02F1A10B600873F31 /* HomeViewController.swift */,
 				897E47C42F1A155A00873F31 /* AddEmotion */,
 			);
@@ -154,6 +178,8 @@
 		897E47C42F1A155A00873F31 /* AddEmotion */ = {
 			isa = PBXGroup;
 			children = (
+				897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */,
+				897D22622F1B84EB00EFF62E /* AddEmotionView.swift */,
 				897E47C52F1A157C00873F31 /* AddEmotionViewController.swift */,
 			);
 			path = AddEmotion;
@@ -197,7 +223,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1640;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					897E47882F19F93100873F31 = {
 						CreatedOnToolsVersion = 16.4;
@@ -241,13 +267,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */,
 				897E47C62F1A157C00873F31 /* AddEmotionViewController.swift in Sources */,
+				897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */,
+				897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */,
 				897E47C82F1A166A00873F31 /* Emotion.swift in Sources */,
+				893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */,
 				897E47B62F1A0EC300873F31 /* AppDelegate.swift in Sources */,
+				893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */,
 				897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */,
 				897E47B72F1A0EC300873F31 /* SceneDelegate.swift in Sources */,
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
-				897E47CA2F1A180C00873F31 /* EmotionCell.swift in Sources */,
+				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
+				893288F82F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,6 +327,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jang.ReFeel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -323,6 +359,10 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.jang.ReFeel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -388,6 +428,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -445,6 +486,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};

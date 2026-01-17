@@ -6,73 +6,65 @@
 //
 
 import UIKit
+import Combine
 
 final class HomeViewController: UIViewController {
-    private var emotions: [Emotion] = [
-        Emotion(id: UUID(), content: "오늘 너무 피곤하다", createdAt: Date()),
-        Emotion(id: UUID(), content: "그래도 앱 하나 만들었다", createdAt: Date()),
-        Emotion(id: UUID(), content: "조금은 뿌듯한 하루", createdAt: Date())
-    ]
+    private let viewModel: HomeViewModel
+    private let homeView = HomeView()
+    private var cancellables = Set<AnyCancellable>()
     
-    private lazy var addEmotionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("감정 추가하기", for: .normal)
-        button.addTarget(self, action: #selector(addEmotionButtonTapped), for: .touchUpInside)
-        return button
-    }()
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
     
-    private var tableView: UITableView = {
-        let tv = UITableView()
-        return tv
-    }()
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func loadView() {
+        view = homeView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray5
         title = "Re:Feel"
-        tableView.dataSource = self
-        tableView.register(EmotionCell.self, forCellReuseIdentifier: EmotionCell.identifier)
-        
-        setUpAutoLayout()
+        self.homeView.tableView.delegate = self
+        self.homeView.tableView.dataSource = self
+        bindViewModel()
+        setupAction()
+        viewModel.fetchEmotions()
     }
     
-    private func setUpAutoLayout() {
-        view.addSubview(addEmotionButton)
-        view.addSubview(tableView)
-        addEmotionButton.translatesAutoresizingMaskIntoConstraints = false
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            addEmotionButton.widthAnchor.constraint(equalToConstant: 100),
-            addEmotionButton.heightAnchor.constraint(equalToConstant: 50),
-            addEmotionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-            addEmotionButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: addEmotionButton.topAnchor, constant: -10)
-        ])
+    private func setupAction() {
+        homeView.addViewButton.addTarget(self, action: #selector(addViewBtnTapped), for: .touchUpInside)
     }
     
-    @objc private func addEmotionButtonTapped() {
-        let vc = AddEmotionViewController()
-        vc.onEmotionAdded = { [weak self] emotion in
-            self?.emotions.insert(emotion, at: 0)
-            self?.tableView.reloadData()
-        }
+    private func bindViewModel() {
+        viewModel.$emotions
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.homeView.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+    }
+    
+    @objc func addViewBtnTapped() {
+        let addViewModel = AddEmotionViewModel(repository: viewModel.repository)
+        let vc = AddEmotionViewController(viewModel: addViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-extension HomeViewController: UITableViewDataSource {
+extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        emotions.count
+        viewModel.emotions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: EmotionCell.identifier, for: indexPath) as? EmotionCell else { return UITableViewCell() }
-        cell.configure(with: emotions[indexPath.row])
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeEmotionCell.identifier, for: indexPath) as? HomeEmotionCell else { return UITableViewCell() }
+        let emotion = viewModel.emotions[indexPath.row]
+        cell.configure(with: emotion)
         return cell
     }
 }

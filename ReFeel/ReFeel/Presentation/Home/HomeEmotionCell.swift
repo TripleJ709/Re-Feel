@@ -1,5 +1,5 @@
 //
-//  EmotionCell.swift
+//  HomeEmotionCell.swift
 //  ReFeel
 //
 //  Created by 장주진 on 1/16/26.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-class EmotionCell: UITableViewCell {
-    static let identifier = "EmotionCell"
+final class HomeEmotionCell: UITableViewCell {
+    static let identifier = "HomeEmotionCell"
     
     private let contentLabel: UILabel = {
         let label = UILabel()
