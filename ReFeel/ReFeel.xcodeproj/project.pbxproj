@@ -23,6 +23,12 @@
 		897E47C82F1A166A00873F31 /* Emotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C72F1A166A00873F31 /* Emotion.swift */; };
 		897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */; };
 		897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */; };
+		89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */; };
+		89BDC4F92F1DDCCE00D14806 /* FakeEmotionTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4F82F1DDCCE00D14806 /* FakeEmotionTransformer.swift */; };
+		89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */; };
+		89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */; };
+		89BDC5002F1DFDCD00D14806 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 89BDC4FF2F1DFDCD00D14806 /* Alamofire */; };
+		89EAFDBA2F1F8C79007BEC32 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFDB92F1F8C79007BEC32 /* Secrets.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +50,11 @@
 		897E47C72F1A166A00873F31 /* Emotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emotion.swift; sourceTree = "<group>"; };
 		897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmotionCell.swift; sourceTree = "<group>"; };
 		897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
+		89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTransforming.swift; sourceTree = "<group>"; };
+		89BDC4F82F1DDCCE00D14806 /* FakeEmotionTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FakeEmotionTransformer.swift; sourceTree = "<group>"; };
+		89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenModel.swift; sourceTree = "<group>"; };
+		89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GptEmotionTransformer.swift; sourceTree = "<group>"; };
+		89EAFDB92F1F8C79007BEC32 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89BDC5002F1DFDCD00D14806 /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,6 +72,9 @@
 		893288F62F1B6D2D00D216C9 /* Emotion */ = {
 			isa = PBXGroup;
 			children = (
+				89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */,
+				89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */,
+				89BDC4F82F1DDCCE00D14806 /* FakeEmotionTransformer.swift */,
 				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
 				893288F92F1B6DB600D216C9 /* EmotionRepository.swift */,
 			);
@@ -85,6 +100,7 @@
 		897E47AA2F1A0E4300873F31 /* ReFeel */ = {
 			isa = PBXGroup;
 			children = (
+				89EAFDB92F1F8C79007BEC32 /* Secrets.swift */,
 				897E47A32F1A0E4300873F31 /* Info.plist */,
 				897E47B52F1A0EC300873F31 /* App */,
 				897E47B92F1A0F0300873F31 /* Presentation */,
@@ -164,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				897E47C72F1A166A00873F31 /* Emotion.swift */,
+				89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -210,6 +227,7 @@
 			);
 			name = ReFeel;
 			packageProductDependencies = (
+				89BDC4FF2F1DFDCD00D14806 /* Alamofire */,
 			);
 			productName = ReFeel;
 			productReference = 897E47892F19F93100873F31 /* ReFeel.app */;
@@ -239,6 +257,9 @@
 			);
 			mainGroup = 897E47802F19F93100873F31;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				89BDC4FE2F1DFDCD00D14806 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 897E478A2F19F93100873F31 /* Products */;
 			projectDirPath = "";
@@ -268,17 +289,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */,
+				89EAFDBA2F1F8C79007BEC32 /* Secrets.swift in Sources */,
+				89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */,
 				897E47C62F1A157C00873F31 /* AddEmotionViewController.swift in Sources */,
 				897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */,
 				897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */,
 				897E47C82F1A166A00873F31 /* Emotion.swift in Sources */,
+				89BDC4F92F1DDCCE00D14806 /* FakeEmotionTransformer.swift in Sources */,
 				893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */,
 				897E47B62F1A0EC300873F31 /* AppDelegate.swift in Sources */,
 				893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */,
 				897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */,
 				897E47B72F1A0EC300873F31 /* SceneDelegate.swift in Sources */,
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
+				89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */,
 				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
+				89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */,
 				893288F82F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -514,6 +540,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		89BDC4FE2F1DFDCD00D14806 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.11.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		89BDC4FF2F1DFDCD00D14806 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89BDC4FE2F1DFDCD00D14806 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 897E47812F19F93100873F31 /* Project object */;
 }

@@ -50,7 +50,7 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func addViewBtnTapped() {
-        let addViewModel = AddEmotionViewModel(repository: viewModel.repository)
+        let addViewModel = AddEmotionViewModel(transformer: viewModel.transformer, repository: viewModel.repository)
         let vc = AddEmotionViewController(viewModel: addViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }

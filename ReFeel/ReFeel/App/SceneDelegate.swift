@@ -18,7 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         
         let repository = EmotionRepository()
-        let homeViewModel = HomeViewModel(repository: repository)
+        let transformer = GptEmotionTransformer()
+        let homeViewModel = HomeViewModel(repository: repository, transformer: transformer)
         let homeViewController = HomeViewController(viewModel: homeViewModel)
         
         window.rootViewController = UINavigationController(rootViewController: homeViewController)

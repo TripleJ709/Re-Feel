@@ -44,13 +44,13 @@ final class AddEmotionView: UIView {
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            emotionTextView.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            emotionTextView.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-            emotionTextView.heightAnchor.constraint(equalToConstant: 100),
-            emotionTextView.widthAnchor.constraint(equalToConstant: 100),
-
-            saveButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            saveButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            emotionTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
+            emotionTextView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            emotionTextView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            emotionTextView.heightAnchor.constraint(equalToConstant: 200),
+            
+            saveButton.topAnchor.constraint(equalTo: emotionTextView.bottomAnchor, constant: 20),
+            saveButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor)
         ])
     }
 }

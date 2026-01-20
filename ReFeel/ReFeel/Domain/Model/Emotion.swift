@@ -9,6 +9,7 @@ import Foundation
 
 struct Emotion {
     let id: UUID
-    let content: String
+    let rawText: String
+    let transformedText: String
     let createdAt: Date
 }

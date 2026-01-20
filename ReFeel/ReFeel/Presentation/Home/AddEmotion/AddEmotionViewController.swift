@@ -30,15 +30,24 @@ final class AddEmotionViewController: UIViewController {
         super.viewDidLoad()
         title = "Re:Feel - addView"
         setupAction()
+        bindViewModel()
     }
     
     private func setupAction() {
         addView.saveButton.addTarget(self, action: #selector(saveBtnTapped), for: .touchUpInside)
     }
     
+    private func bindViewModel() {
+        viewModel.didCreateEmotion
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.navigationController?.popViewController(animated: true)
+            }
+            .store(in: &cancellables)
+    }
+    
     @objc private func saveBtnTapped() {
         viewModel.text = addView.emotionTextView.text
-        viewModel.saveEmotion()
-        navigationController?.popViewController(animated: true)
+        viewModel.submit()
     }
 }

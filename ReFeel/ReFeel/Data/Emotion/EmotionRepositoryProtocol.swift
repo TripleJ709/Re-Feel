@@ -9,6 +9,6 @@ import Foundation
 import Combine
 
 protocol EmotionRepositoryProtocol {
-    func fetchAll() -> AnyPublisher<[Emotion], Never>
-    func save(_ emotion: Emotion)
+    func fetchAll() -> AnyPublisher<[Emotion], Error>
+    func save(_ emotion: Emotion) -> AnyPublisher<Void, Error>
 }

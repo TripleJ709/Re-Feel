@@ -51,7 +51,7 @@ final class HomeEmotionCell: UITableViewCell {
     }
     
     func configure(with emotion: Emotion) {
-        contentLabel.text = emotion.content
+        contentLabel.text = emotion.transformedText
         dateLabel.text = DateFormatter.short.string(from: emotion.createdAt)
     }
 }

@@ -14,10 +14,13 @@ final class HomeViewModel {
     @Published private(set) var errorMessage: String?
     
     let repository: EmotionRepositoryProtocol
+    let transformer: EmotionTransforming
+    
     private var cancellables = Set<AnyCancellable>()
     
-    init(repository: EmotionRepositoryProtocol) {
+    init(repository: EmotionRepositoryProtocol, transformer: EmotionTransforming) {
         self.repository = repository
+        self.transformer = transformer
     }
     
     func fetchEmotions() {
@@ -25,10 +28,15 @@ final class HomeViewModel {
         
         repository.fetchAll()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] emotions in
+            .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
+                
+                if case .failure(let error) = completion {
+                    self?.errorMessage = error.localizedDescription
+                }
+            }, receiveValue: { [weak self] emotions in
                 self?.emotions = emotions
-            }
+            })
             .store(in: &cancellables)
     }
 }
