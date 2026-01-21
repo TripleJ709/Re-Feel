@@ -51,6 +51,14 @@ final class HomeViewController: UIViewController {
     
     @objc func addViewBtnTapped() {
         let addViewModel = AddEmotionViewModel(transformer: viewModel.transformer, repository: viewModel.repository)
+        
+        addViewModel.didCreateEmotion
+            .sink { [weak self] _ in
+                print("새 글 등록, 목록 새로고침")
+                self?.viewModel.fetchEmotions()
+            }
+            .store(in: &cancellables)
+        
         let vc = AddEmotionViewController(viewModel: addViewModel)
         navigationController?.pushViewController(vc, animated: true)
     }

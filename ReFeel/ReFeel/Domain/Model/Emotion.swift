@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Emotion {
+struct Emotion: Codable {
     let id: UUID
     let rawText: String
     let transformedText: String
