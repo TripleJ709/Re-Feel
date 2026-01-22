@@ -10,48 +10,72 @@ import UIKit
 final class HomeEmotionCell: UITableViewCell {
     static let identifier = "HomeEmotionCell"
     
-    private let contentLabel: UILabel = {
-        let label = UILabel()
-        label.numberOfLines = 0
-        label.font = .systemFont(ofSize: 16)
-        return label
+    private let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 16
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOffset = CGSize(width: 0, height: 4)
+        view.layer.shadowRadius = 8
+        return view
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 12, weight: .semibold)
+        label.textColor = .systemGray
+        return label
+    }()
+    
+    private let contentLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 3
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        label.textColor = .label
         return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
+        setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setupUI() {
-        contentView.addSubview(contentLabel)
-        contentView.addSubview(dateLabel)
-        contentLabel.translatesAutoresizingMaskIntoConstraints = false
+    private func setupLayout() {
+        contentView.addSubview(containerView)
+        containerView.addSubview(dateLabel)
+        containerView.addSubview(contentLabel)
+        
+        containerView.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            contentLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
-            contentLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            contentLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20),
             
-            dateLabel.topAnchor.constraint(equalTo: contentLabel.bottomAnchor, constant: 8),
-            dateLabel.leadingAnchor.constraint(equalTo: contentLabel.leadingAnchor),
-            dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12)
+            dateLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 16),
+            dateLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            
+            contentLabel.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 10),
+            contentLabel.bottomAnchor.constraint(equalTo: containerView.bottomAnchor, constant: -16),
+            contentLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            contentLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20)
         ])
     }
     
     func configure(with emotion: Emotion) {
-        contentLabel.text = emotion.transformedText
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 5
+        
+        let attrString = NSAttributedString(string: emotion.transformedText, attributes: [.paragraphStyle: paragraphStyle, .font: UIFont.systemFont(ofSize: 16)])
+        contentLabel.attributedText = attrString
         dateLabel.text = DateFormatter.short.string(from: emotion.createdAt)
     }
 }

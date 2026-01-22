@@ -33,7 +33,14 @@ final class HomeViewController: UIViewController {
         self.homeView.tableView.dataSource = self
         bindViewModel()
         setupAction()
+        setupUI()
         viewModel.fetchEmotions()
+    }
+    
+    private func setupUI() {
+        view.backgroundColor = .systemGroupedBackground
+        homeView.tableView.backgroundColor = .clear
+        homeView.tableView.separatorStyle = .none
     }
     
     private func setupAction() {
