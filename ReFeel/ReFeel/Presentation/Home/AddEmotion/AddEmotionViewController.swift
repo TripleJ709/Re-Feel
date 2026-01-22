@@ -13,6 +13,12 @@ final class AddEmotionViewController: UIViewController {
     private let addView = AddEmotionView()
     private var cancellables = Set<AnyCancellable>()
     
+    private lazy var saveButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(title: "저장", style: .done, target: self, action: #selector(saveBtnTapped))
+        button.isEnabled = false
+        return button
+    }()
+    
     init(viewModel: AddEmotionViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -28,16 +34,37 @@ final class AddEmotionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Re:Feel - addView"
-        setupAction()
+        addView.textView.delegate = self
         bindViewModel()
+        setupNavigationBar()
     }
     
-    private func setupAction() {
-        addView.saveButton.addTarget(self, action: #selector(saveBtnTapped), for: .touchUpInside)
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        addView.textView.becomeFirstResponder()
+    }
+    
+    private func setupNavigationBar() {
+        title = "Re:Feel - addView"
+        navigationItem.rightBarButtonItem = saveButton
+        navigationItem.largeTitleDisplayMode = .never
     }
     
     private func bindViewModel() {
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.addView.activityIndicator.startAnimating()
+                    self?.saveButton.isEnabled = false
+                    self?.addView.textView.isEditable = false
+                } else {
+                    self?.addView.activityIndicator.stopAnimating()
+                    self?.addView.textView.isEditable = true
+                }
+            }
+            .store(in: &cancellables)
+        
         viewModel.didCreateEmotion
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -47,7 +74,16 @@ final class AddEmotionViewController: UIViewController {
     }
     
     @objc private func saveBtnTapped() {
-        viewModel.text = addView.emotionTextView.text
+        view.endEditing(true)
+//        viewModel.text = addView.textView.text
         viewModel.submit()
+    }
+}
+
+extension AddEmotionViewController: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
+        viewModel.text = textView.text
+        addView.placeholderLabel.isHidden = !textView.text.isEmpty
+        saveButton.isEnabled = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
