@@ -53,15 +53,42 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func changeRootToHome(userId: String) {
         let repository = EmotionRepository(userId: userId)
         let transformer = GptEmotionTransformer()
+        
         let homeViewModel = HomeViewModel(repository: repository, transformer: transformer)
-        let homeViewController = HomeViewController(viewModel: homeViewModel)
-        let nav = UINavigationController(rootViewController: homeViewController)
+        let homeVC = HomeViewController(viewModel: homeViewModel)
+        let homeNav = UINavigationController(rootViewController: homeVC)
+        homeNav.tabBarItem = UITabBarItem(title: "일기", image: UIImage(systemName: "book.fill"), tag: 0)
+        
+        let settingVC = SettingViewController()
+        let settingNav = UINavigationController(rootViewController: settingVC)
+        settingNav.tabBarItem = UITabBarItem(title: "설정", image: UIImage(systemName: "gearshape.fill"), tag: 1)
+        
+        let tabBarController = MainTabBarController()
+        tabBarController.viewControllers = [homeNav, settingNav]
         
         guard let window = self.window else { return }
-        
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-            window.rootViewController = nav
+            window.rootViewController = tabBarController
         }, completion: nil)
+        
+        
+        
+        
+        
+        
+        
+        
+//        let repository = EmotionRepository(userId: userId)
+//        let transformer = GptEmotionTransformer()
+//        let homeViewModel = HomeViewModel(repository: repository, transformer: transformer)
+//        let homeViewController = HomeViewController(viewModel: homeViewModel)
+//        let nav = UINavigationController(rootViewController: homeViewController)
+//        
+//        guard let window = self.window else { return }
+//        
+//        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+//            window.rootViewController = nav
+//        }, completion: nil)
     }
     
     

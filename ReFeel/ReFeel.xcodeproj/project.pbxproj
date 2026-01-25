@@ -35,6 +35,8 @@
 		89EAFDC82F20DBB5007BEC32 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 89EAFDC72F20DBB5007BEC32 /* GoogleSignIn */; };
 		89EAFDCA2F20DBB5007BEC32 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89EAFDC92F20DBB5007BEC32 /* GoogleSignInSwift */; };
 		89EAFDCD2F20DD4A007BEC32 /* LoginLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */; };
+		89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE1A2F262963007BEC32 /* SettingViewController.swift */; };
+		89EAFE1E2F262B6F007BEC32 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +64,8 @@
 		89EAFDB92F1F8C79007BEC32 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		89EAFDBD2F20DAA0007BEC32 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLoadingViewController.swift; sourceTree = "<group>"; };
+		89EAFE1A2F262963007BEC32 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
+		89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,8 +151,10 @@
 		897E47B92F1A0F0300873F31 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
+				89EAFE1C2F262B33007BEC32 /* TabBar */,
 				89EAFDCB2F20DD2D007BEC32 /* Login */,
 				897E47BF2F1A101500873F31 /* Home */,
+				89EAFE192F2628BB007BEC32 /* Setting */,
 			);
 			path = Presentation;
 			sourceTree = "<group>";
@@ -229,6 +235,22 @@
 				89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */,
 			);
 			path = Login;
+			sourceTree = "<group>";
+		};
+		89EAFE192F2628BB007BEC32 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				89EAFE1A2F262963007BEC32 /* SettingViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		89EAFE1C2F262B33007BEC32 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */,
+			);
+			path = TabBar;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -319,6 +341,7 @@
 			files = (
 				89EAFDCD2F20DD4A007BEC32 /* LoginLoadingViewController.swift in Sources */,
 				893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */,
+				89EAFE1E2F262B6F007BEC32 /* MainTabBarController.swift in Sources */,
 				89EAFDBA2F1F8C79007BEC32 /* Secrets.swift in Sources */,
 				89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */,
 				897E47C62F1A157C00873F31 /* AddEmotionViewController.swift in Sources */,
@@ -333,6 +356,7 @@
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
 				89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */,
 				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
+				89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */,
 				89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */,
 				893288F82F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift in Sources */,
 			);
