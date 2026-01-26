@@ -82,4 +82,20 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         cell.configure(with: emotion)
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let selectedEmotion = viewModel.emotions[indexPath.row]
+        let detailViewModel = DetailViewModel(emotion: selectedEmotion, repository: viewModel.repository)
+        
+        detailViewModel.didDeleteEmotion
+            .sink { [weak self] _ in
+                print("메모 삭제 -> 목록 새로고침")
+                self?.viewModel.fetchEmotions()
+            }
+            .store(in: &cancellables)
+        
+        let detailVC = DetailViewController(viewModel: detailViewModel)
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }

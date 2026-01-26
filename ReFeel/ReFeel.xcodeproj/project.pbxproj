@@ -37,6 +37,9 @@
 		89EAFDCD2F20DD4A007BEC32 /* LoginLoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */; };
 		89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE1A2F262963007BEC32 /* SettingViewController.swift */; };
 		89EAFE1E2F262B6F007BEC32 /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */; };
+		89EAFE212F274346007BEC32 /* DetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE202F274346007BEC32 /* DetailViewModel.swift */; };
+		89EAFE232F274465007BEC32 /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE222F274465007BEC32 /* DetailView.swift */; };
+		89EAFE252F274FD4007BEC32 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EAFE242F274FD4007BEC32 /* DetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,6 +69,9 @@
 		89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginLoadingViewController.swift; sourceTree = "<group>"; };
 		89EAFE1A2F262963007BEC32 /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		89EAFE202F274346007BEC32 /* DetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewModel.swift; sourceTree = "<group>"; };
+		89EAFE222F274465007BEC32 /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
+		89EAFE242F274FD4007BEC32 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,6 +196,7 @@
 				893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */,
 				893288FD2F1B721D00D216C9 /* HomeView.swift */,
 				897E47C02F1A10B600873F31 /* HomeViewController.swift */,
+				89EAFE1F2F274330007BEC32 /* Detail */,
 				897E47C42F1A155A00873F31 /* AddEmotion */,
 			);
 			path = Home;
@@ -251,6 +258,16 @@
 				89EAFE1D2F262B6F007BEC32 /* MainTabBarController.swift */,
 			);
 			path = TabBar;
+			sourceTree = "<group>";
+		};
+		89EAFE1F2F274330007BEC32 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				89EAFE202F274346007BEC32 /* DetailViewModel.swift */,
+				89EAFE222F274465007BEC32 /* DetailView.swift */,
+				89EAFE242F274FD4007BEC32 /* DetailViewController.swift */,
+			);
+			path = Detail;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -341,9 +358,11 @@
 			files = (
 				89EAFDCD2F20DD4A007BEC32 /* LoginLoadingViewController.swift in Sources */,
 				893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */,
+				89EAFE252F274FD4007BEC32 /* DetailViewController.swift in Sources */,
 				89EAFE1E2F262B6F007BEC32 /* MainTabBarController.swift in Sources */,
 				89EAFDBA2F1F8C79007BEC32 /* Secrets.swift in Sources */,
 				89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */,
+				89EAFE232F274465007BEC32 /* DetailView.swift in Sources */,
 				897E47C62F1A157C00873F31 /* AddEmotionViewController.swift in Sources */,
 				897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */,
 				897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */,
@@ -355,6 +374,7 @@
 				897E47B72F1A0EC300873F31 /* SceneDelegate.swift in Sources */,
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
 				89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */,
+				89EAFE212F274346007BEC32 /* DetailViewModel.swift in Sources */,
 				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
 				89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */,
 				89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */,

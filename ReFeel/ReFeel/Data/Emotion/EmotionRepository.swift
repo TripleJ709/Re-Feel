@@ -59,4 +59,21 @@ final class EmotionRepository: EmotionRepositoryProtocol {
         }
         .eraseToAnyPublisher()
     }
+    
+    func delete(_ emotion: Emotion) -> AnyPublisher<Void, any Error> {
+        return Future { [weak self] promise in
+            guard let self else { return }
+            
+            self.db.collection("users").document(self.userId).collection("emotions")
+                .document(emotion.id.uuidString)
+                .delete { error in
+                    if let error {
+                        promise(.failure(error))
+                    } else {
+                        promise(.success(()))
+                    }
+                }
+        }
+        .eraseToAnyPublisher()
+    }
 }
