@@ -12,6 +12,7 @@ final class HomeViewController: UIViewController {
     private let viewModel: HomeViewModel
     private let homeView = HomeView()
     private var cancellables = Set<AnyCancellable>()
+    private let headerView = HomeHeaderView(frame: CGRect(x: 0, y: 0, width: 0, height: 120))
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -42,6 +43,7 @@ final class HomeViewController: UIViewController {
         homeView.tableView.backgroundColor = .clear
         homeView.tableView.separatorStyle = .none
         homeView.tableView.sectionHeaderHeight = 50
+        homeView.tableView.tableHeaderView = headerView
     }
     
     private func setupAction() {
@@ -49,15 +51,24 @@ final class HomeViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        viewModel.$emotions
+        viewModel.$sections
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] emotions in
+            .sink { [weak self] sections in
                 guard let self else { return }
                 
-                if emotions.isEmpty {
+                if let firstSection = sections.first {
+                    let count = firstSection.items.count
+                    self.headerView.configure(count: count)
+                } else {
+                    self.headerView.configure(count: 0)
+                }
+                
+                if sections.isEmpty {
                     self.homeView.tableView.backgroundView = HomeEmptyView()
+                    self.homeView.tableView.tableHeaderView = nil
                 } else {
                     self.homeView.tableView.backgroundView = nil
+                    self.homeView.tableView.tableHeaderView = self.headerView
                 }
                 
                 self.homeView.tableView.reloadData()
