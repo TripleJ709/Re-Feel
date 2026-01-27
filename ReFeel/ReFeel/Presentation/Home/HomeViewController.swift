@@ -50,8 +50,16 @@ final class HomeViewController: UIViewController {
     private func bindViewModel() {
         viewModel.$emotions
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.homeView.tableView.reloadData()
+            .sink { [weak self] emotions in
+                guard let self else { return }
+                
+                if emotions.isEmpty {
+                    self.homeView.tableView.backgroundView = HomeEmptyView()
+                } else {
+                    self.homeView.tableView.backgroundView = nil
+                }
+                
+                self.homeView.tableView.reloadData()
             }
             .store(in: &cancellables)
     }

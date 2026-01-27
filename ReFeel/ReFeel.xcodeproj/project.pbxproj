@@ -23,6 +23,7 @@
 		897E47C82F1A166A00873F31 /* Emotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C72F1A166A00873F31 /* Emotion.swift */; };
 		897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */; };
 		897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */; };
+		89A60B142F28C73800168ED7 /* HomeEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B132F28C73800168ED7 /* HomeEmptyView.swift */; };
 		89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */; };
 		89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */; };
 		89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */; };
@@ -61,6 +62,7 @@
 		897E47C72F1A166A00873F31 /* Emotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Emotion.swift; sourceTree = "<group>"; };
 		897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmotionCell.swift; sourceTree = "<group>"; };
 		897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
+		89A60B132F28C73800168ED7 /* HomeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmptyView.swift; sourceTree = "<group>"; };
 		89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTransforming.swift; sourceTree = "<group>"; };
 		89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenModel.swift; sourceTree = "<group>"; };
 		89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GptEmotionTransformer.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 		897E47BF2F1A101500873F31 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				89A60B132F28C73800168ED7 /* HomeEmptyView.swift */,
 				897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */,
 				893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */,
 				893288FD2F1B721D00D216C9 /* HomeView.swift */,
@@ -357,6 +360,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89EAFDCD2F20DD4A007BEC32 /* LoginLoadingViewController.swift in Sources */,
+				89A60B142F28C73800168ED7 /* HomeEmptyView.swift in Sources */,
 				893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */,
 				89EAFE252F274FD4007BEC32 /* DetailViewController.swift in Sources */,
 				89EAFE1E2F262B6F007BEC32 /* MainTabBarController.swift in Sources */,
