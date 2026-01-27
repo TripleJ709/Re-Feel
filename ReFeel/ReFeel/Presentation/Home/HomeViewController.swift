@@ -41,6 +41,7 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .systemGroupedBackground
         homeView.tableView.backgroundColor = .clear
         homeView.tableView.separatorStyle = .none
+        homeView.tableView.sectionHeaderHeight = 50
     }
     
     private func setupAction() {
@@ -80,20 +81,47 @@ final class HomeViewController: UIViewController {
 }
 
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        viewModel.sections.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.emotions.count
+        viewModel.sections[section].items.count
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .clear
+        
+        let titleLabel = UILabel()
+        titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        titleLabel.textColor = .label
+        
+        let sectionDate = viewModel.sections[section].date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 M월"
+        titleLabel.text = formatter.string(from: sectionDate)
+        
+        headerView.addSubview(titleLabel)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 20),
+            titleLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -10)
+        ])
+        return headerView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeEmotionCell.identifier, for: indexPath) as? HomeEmotionCell else { return UITableViewCell() }
-        let emotion = viewModel.emotions[indexPath.row]
+        let emotion = viewModel.sections[indexPath.section].items[indexPath.row]
         cell.configure(with: emotion)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let selectedEmotion = viewModel.emotions[indexPath.row]
+        let selectedEmotion = viewModel.sections[indexPath.section].items[indexPath.row]
         let detailViewModel = DetailViewModel(emotion: selectedEmotion, repository: viewModel.repository)
         
         detailViewModel.didDeleteEmotion
