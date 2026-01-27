@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoginLoadingViewController: UIViewController {
+final class LoginLoadingViewController: UIViewController {
     private let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.color = .gray

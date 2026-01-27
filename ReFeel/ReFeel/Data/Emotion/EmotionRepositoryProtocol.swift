@@ -11,4 +11,5 @@ import Combine
 protocol EmotionRepositoryProtocol {
     func fetchAll() -> AnyPublisher<[Emotion], Error>
     func save(_ emotion: Emotion) -> AnyPublisher<Void, Error>
+    func delete(_ emotion: Emotion) -> AnyPublisher<Void, Error>
 }

@@ -8,7 +8,7 @@
 import UIKit
 import FirebaseAuth
 
-class SettingViewController: UIViewController {
+final class SettingViewController: UIViewController {
     private let tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")

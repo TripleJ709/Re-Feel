@@ -12,6 +12,7 @@ final class HomeViewModel {
     @Published private(set) var emotions: [Emotion] = []
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var errorMessage: String?
+    @Published private(set) var sections: [(date: Date, items: [Emotion])] = []
     
     let repository: EmotionRepositoryProtocol
     let transformer: EmotionTransforming
@@ -36,7 +37,20 @@ final class HomeViewModel {
                 }
             }, receiveValue: { [weak self] emotions in
                 self?.emotions = emotions
+                self?.organizeByMonth(emotions: emotions)
             })
             .store(in: &cancellables)
+    }
+    
+    private func organizeByMonth(emotions: [Emotion]) {
+        let calendar = Calendar.current
+        let grouped = Dictionary(grouping: emotions) { emotion -> Date in
+            let components = calendar.dateComponents([.year, .month], from: emotion.createdAt)
+            return calendar.date(from: components) ?? Date()
+        }
+        
+        let sortedSection = grouped.sorted { $0.key > $1.key }
+            .map { (date: $0.key, items: $0.value) }
+        self.sections = sortedSection
     }
 }
