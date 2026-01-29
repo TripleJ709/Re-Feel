@@ -6,49 +6,70 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Combine
 
 final class SettingViewController: UIViewController {
-    private let tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .insetGrouped)
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        return tv
-    }()
+    private let viewModel = SettingViewModel()
+    private let settingView = SettingView()
+    private var cancellables = Set<AnyCancellable>()
+    
+    override func loadView() {
+        view = settingView
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        settingView.tableView.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupLayout()
+        setupController()
+        bindViewModel()
     }
     
-    private func setupUI() {
+    private func setupController() {
         title = "설정"
-        view.backgroundColor = .systemGroupedBackground
-        tableView.backgroundColor = .systemGroupedBackground
-        tableView.delegate = self
-        tableView.dataSource = self
+        settingView.tableView.delegate = self
+        settingView.tableView.dataSource = self
     }
     
-    private func setupLayout() {
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+    private func bindViewModel() {
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.settingView.activityIndicator.startAnimating()
+                    self?.view.isUserInteractionEnabled = false
+                } else {
+                    self?.settingView.activityIndicator.stopAnimating()
+                    self?.view.isUserInteractionEnabled = true
+                }
+            }
+            .store(in: &cancellables)
         
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
-    // MARK: - todo: 로그아웃 로직 구현하기
-    private func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-            print("로그아웃 성공")
-        } catch  {
-            print("로그아웃 실패: \(error)")
-        }
+        viewModel.$alertMessage
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self?.present(alert, animated: true)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.didLinkGoogleAccount
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                self.settingView.tableView.reloadData()
+                
+                let alert = UIAlertController(title: "성공", message: "Google 계정과 성공적으로 연동되었습니다!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(alert, animated: true)
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -69,19 +90,33 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         if indexPath.section == 0 {
-            cell.textLabel?.text = "로그아웃 / 데이터 초기화"
-            cell.textLabel?.textColor = .systemRed
+            let status = viewModel.checkCurrentProvider()
+            cell.textLabel?.text = "현재 계정: \(status)"
+            
+            if status == "익명 로그인 사용자" {
+                cell.accessoryType = .disclosureIndicator
+                cell.textLabel?.text = "Google 계정 연동하기"
+                cell.textLabel?.textColor = .systemBlue
+                cell.selectionStyle = .default
+            } else {
+                cell.accessoryType = .checkmark
+                cell.textLabel?.textColor = .label
+                cell.selectionStyle = .none
+            }
         } else {
+            cell.textLabel?.text = indexPath.row == 0 ? "버전 정보" : "문의하기"
+            cell.textLabel?.textColor = .label
+            cell.accessoryType = indexPath.row == 1 ? .disclosureIndicator : .none
+            cell.selectionStyle = indexPath.row == 1 ? .default : .none
+            
             if indexPath.row == 0 {
-                cell.textLabel?.text = "버전 정보"
                 let versionLabel = UILabel()
                 versionLabel.text = "1.0.0"
                 versionLabel.textColor = .secondaryLabel
                 versionLabel.sizeToFit()
                 cell.accessoryView = versionLabel
             } else {
-                cell.textLabel?.text = "문의하기"
-                cell.accessoryType = .disclosureIndicator
+                cell.accessoryView = nil
             }
         }
         return cell
@@ -89,13 +124,12 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 0 {
-            let alert = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까? 익명 사용자의 경우 데이터가 사라질 수 있습니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-                self.handleLogout()
-            }))
-            present(alert, animated: true)
+        
+        if indexPath.section == 0 {
+            let status = viewModel.checkCurrentProvider()
+            if status == "익명 로그인 사용자" {
+                viewModel.linkGoogleAccount(presenting: self)
+            }
         }
     }
 }
