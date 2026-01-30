@@ -19,6 +19,7 @@ final class GptEmotionTransformer: EmotionTransforming {
             "Content-Type": "application/json"
         ]
         
+        // MARK: - TODO: GPT 프롬포트 적절하게 변경하기
         let parameter: [String: Any] = [
             "model": "gpt-4o-mini",
             "messages": [

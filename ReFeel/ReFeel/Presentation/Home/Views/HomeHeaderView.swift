@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeHeaderView: UIView {
+final class HomeHeaderView: UIView {
     
     private let containerView: UIView = {
         let view = UIView()

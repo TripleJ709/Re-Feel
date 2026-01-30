@@ -102,12 +102,17 @@
 		893288F62F1B6D2D00D216C9 /* Emotion */ = {
 			isa = PBXGroup;
 			children = (
-				89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */,
 				89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */,
-				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
 				893288F92F1B6DB600D216C9 /* EmotionRepository.swift */,
 			);
 			path = Emotion;
+			sourceTree = "<group>";
+		};
+		894DFFBD2F2CA21600E85CCF /* Service */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		897E47802F19F93100873F31 = {
@@ -136,7 +141,7 @@
 				897E47B92F1A0F0300873F31 /* Presentation */,
 				897E47BB2F1A0F1100873F31 /* Domain */,
 				897E47BC2F1A0F1800873F31 /* Data */,
-				897E47BD2F1A0F1D00873F31 /* Network */,
+				894DFFBD2F2CA21600E85CCF /* Service */,
 				897E47B82F1A0EDF00873F31 /* Resource */,
 			);
 			path = ReFeel;
@@ -168,6 +173,8 @@
 				89EAFE1C2F262B33007BEC32 /* TabBar */,
 				89EAFDCB2F20DD2D007BEC32 /* Login */,
 				897E47BF2F1A101500873F31 /* Home */,
+				89EAFE1F2F274330007BEC32 /* Detail */,
+				897E47C42F1A155A00873F31 /* AddEmotion */,
 				89EAFE192F2628BB007BEC32 /* Setting */,
 			);
 			path = Presentation;
@@ -186,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				893288F62F1B6D2D00D216C9 /* Emotion */,
+				897E47BD2F1A0F1D00873F31 /* Network */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -203,9 +211,7 @@
 				893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */,
 				893288FD2F1B721D00D216C9 /* HomeView.swift */,
 				897E47C02F1A10B600873F31 /* HomeViewController.swift */,
-				89A60B152F28D6BA00168ED7 /* OtherView */,
-				89EAFE1F2F274330007BEC32 /* Detail */,
-				897E47C42F1A155A00873F31 /* AddEmotion */,
+				89A60B152F28D6BA00168ED7 /* Views */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -222,6 +228,8 @@
 		897E47C32F1A142700873F31 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
+				89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */,
+				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -244,14 +252,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		89A60B152F28D6BA00168ED7 /* OtherView */ = {
+		89A60B152F28D6BA00168ED7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				89A60B132F28C73800168ED7 /* HomeEmptyView.swift */,
 				897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */,
 				89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */,
 			);
-			path = OtherView;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		89EAFDCB2F20DD2D007BEC32 /* Login */ = {
