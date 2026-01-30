@@ -58,6 +58,13 @@ final class SettingViewController: UIViewController {
             }
             .store(in: &cancellables)
         
+        viewModel.$isNotificationOn
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isOn in
+                self?.settingView.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
         viewModel.didLinkGoogleAccount
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
@@ -75,11 +82,15 @@ final class SettingViewController: UIViewController {
 
 extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : 2
+        if section == 0 { return 1 }
+        if section == 1 {
+            return viewModel.isNotificationOn ? 2 : 1
+        }
+        return 2
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -89,36 +100,67 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+        cell.accessoryView = nil
+        cell.accessoryType = .none
+        cell.selectionStyle = .none
+        cell.textLabel?.textColor = .label
+        
         if indexPath.section == 0 {
             let status = viewModel.checkCurrentProvider()
-            cell.textLabel?.text = "현재 계정: \(status)"
             
-            if status == "익명 로그인 사용자" {
-                cell.accessoryType = .disclosureIndicator
+            if status == "익명 사용자" {
                 cell.textLabel?.text = "Google 계정 연동하기"
                 cell.textLabel?.textColor = .systemBlue
+                cell.accessoryType = .disclosureIndicator
                 cell.selectionStyle = .default
             } else {
-                cell.accessoryType = .checkmark
+                cell.textLabel?.text = "현재 계정: \(status)"
                 cell.textLabel?.textColor = .label
+                cell.accessoryType = .checkmark
                 cell.selectionStyle = .none
             }
-        } else {
+            return cell
+        }
+        
+        if indexPath.section == 1 {
+            if indexPath.row == 0 {
+                cell.textLabel?.text = "일기 작성 알림"
+                
+                let switchControl = UISwitch()
+                switchControl.isOn = viewModel.isNotificationOn
+                switchControl.addTarget(self, action: #selector(didToggleSwitch(_:)), for: .valueChanged)
+                cell.accessoryView = switchControl
+                
+            } else {
+                cell.textLabel?.text = "알림 시간"
+                
+                let datePicker = UIDatePicker()
+                datePicker.datePickerMode = .time
+                datePicker.preferredDatePickerStyle = .compact
+                datePicker.date = viewModel.notificationTime
+                datePicker.addTarget(self, action: #selector(didChangeTime(_:)), for: .valueChanged)
+                cell.accessoryView = datePicker
+            }
+            return cell
+        }
+        
+        if indexPath.section == 2 {
             cell.textLabel?.text = indexPath.row == 0 ? "버전 정보" : "문의하기"
-            cell.textLabel?.textColor = .label
-            cell.accessoryType = indexPath.row == 1 ? .disclosureIndicator : .none
-            cell.selectionStyle = indexPath.row == 1 ? .default : .none
             
             if indexPath.row == 0 {
                 let versionLabel = UILabel()
                 versionLabel.text = "1.0.0"
                 versionLabel.textColor = .secondaryLabel
+                versionLabel.font = .systemFont(ofSize: 16)
                 versionLabel.sizeToFit()
                 cell.accessoryView = versionLabel
             } else {
-                cell.accessoryView = nil
+                cell.accessoryType = .disclosureIndicator
+                cell.selectionStyle = .default
             }
+            return cell
         }
+        
         return cell
     }
     
@@ -131,5 +173,18 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 viewModel.linkGoogleAccount(presenting: self)
             }
         }
+        
+        if indexPath.section == 2 && indexPath.row == 1 {
+            // 문의하기 클릭 시 동작 (이메일 보내기 등 추후 구현)
+            print("문의하기 클릭됨")
+        }
+    }
+    
+    @objc private func didToggleSwitch(_ sender: UISwitch) {
+        viewModel.toggleNotification(isOn: sender.isOn)
+    }
+    
+    @objc private func didChangeTime(_ sender: UIDatePicker) {
+        viewModel.updateNotificationTime(date: sender.date)
     }
 }

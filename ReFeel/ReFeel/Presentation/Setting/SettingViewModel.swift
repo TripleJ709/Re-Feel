@@ -15,8 +15,17 @@ import GoogleSignIn
 final class SettingViewModel {
     @Published var isLoading: Bool = false
     @Published var alertMessage: String?
+    @Published var isNotificationOn: Bool = false
+    @Published var notificationTime: Date = Date()
+    
+    private let kIsNotificationOn = "isNotificationOn"
+    private let kNotificationTime = "notificationTime"
     
     let didLinkGoogleAccount = PassthroughSubject<Void, Never>()
+    
+    init() {
+        loadNotificationSettings()
+    }
     
     func linkGoogleAccount(presenting: UIViewController) {
         isLoading = true
@@ -72,6 +81,47 @@ final class SettingViewModel {
                 return "Google 계정"
             }
             return "이메일 계정(없음)"
+        }
+    }
+    
+    private func loadNotificationSettings() {
+        self.isNotificationOn = UserDefaults.standard.bool(forKey: kIsNotificationOn)
+        
+        if let savedTime = UserDefaults.standard.object(forKey: kNotificationTime) as? Date {
+            self.notificationTime = savedTime
+        } else {
+            var components = DateComponents()
+            components.hour = 21
+            components.minute = 0
+            self.notificationTime = Calendar.current.date(from: components) ?? Date()
+        }
+    }
+    
+    func toggleNotification(isOn: Bool) {
+        isNotificationOn = isOn
+        UserDefaults.standard.set(isOn, forKey: kIsNotificationOn)
+        
+        if isOn {
+            NotificationManager.shared.requestAuthorization { [weak self] granted in
+                guard let self else { return }
+                if granted {
+                    NotificationManager.shared.scheduleNotification(at: self.notificationTime)
+                } else {
+                    self.isNotificationOn = false
+                    self.alertMessage = "알림 권한이 필요합니다. 설정 앱에서 권한을 허용해주세요."
+                }
+            }
+        } else {
+            NotificationManager.shared.removeNotification()
+        }
+    }
+    
+    func updateNotificationTime(date: Date) {
+        notificationTime = date
+        UserDefaults.standard.set(date, forKey: kNotificationTime)
+        
+        if isNotificationOn {
+            NotificationManager.shared.scheduleNotification(at: date)
         }
     }
 }

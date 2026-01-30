@@ -11,6 +11,7 @@
 		893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288F92F1B6DB600D216C9 /* EmotionRepository.swift */; };
 		893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */; };
 		893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FD2F1B721D00D216C9 /* HomeView.swift */; };
+		894DFFBF2F2CA2E000E85CCF /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */; };
 		897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22622F1B84EB00EFF62E /* AddEmotionView.swift */; };
 		897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */; };
 		897E47AB2F1A0E4300873F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 897E47A22F1A0E4300873F31 /* Assets.xcassets */; };
@@ -51,6 +52,7 @@
 		893288F92F1B6DB600D216C9 /* EmotionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionRepository.swift; sourceTree = "<group>"; };
 		893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		893288FD2F1B721D00D216C9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		897D22622F1B84EB00EFF62E /* AddEmotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionView.swift; sourceTree = "<group>"; };
 		897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionViewModel.swift; sourceTree = "<group>"; };
 		897E47892F19F93100873F31 /* ReFeel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReFeel.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +113,7 @@
 		894DFFBD2F2CA21600E85CCF /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */,
 				89A60B1B2F2B3B8100168ED7 /* SettingViewModel.swift in Sources */,
 				89A60B172F28D6DD00168ED7 /* HomeHeaderView.swift in Sources */,
+				894DFFBF2F2CA2E000E85CCF /* NotificationManager.swift in Sources */,
 				897E47B72F1A0EC300873F31 /* SceneDelegate.swift in Sources */,
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
 				89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */,
