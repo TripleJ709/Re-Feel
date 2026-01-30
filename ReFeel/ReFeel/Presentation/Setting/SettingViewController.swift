@@ -6,59 +6,91 @@
 //
 
 import UIKit
-import FirebaseAuth
+import Combine
 
 final class SettingViewController: UIViewController {
-    private let tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .insetGrouped)
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        return tv
-    }()
+    private let viewModel = SettingViewModel()
+    private let settingView = SettingView()
+    private var cancellables = Set<AnyCancellable>()
+    
+    override func loadView() {
+        view = settingView
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        settingView.tableView.reloadData()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
-        setupLayout()
+        setupController()
+        bindViewModel()
     }
     
-    private func setupUI() {
+    private func setupController() {
         title = "설정"
-        view.backgroundColor = .systemGroupedBackground
-        tableView.backgroundColor = .systemGroupedBackground
-        tableView.delegate = self
-        tableView.dataSource = self
+        settingView.tableView.delegate = self
+        settingView.tableView.dataSource = self
     }
     
-    private func setupLayout() {
-        view.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
+    private func bindViewModel() {
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.settingView.activityIndicator.startAnimating()
+                    self?.view.isUserInteractionEnabled = false
+                } else {
+                    self?.settingView.activityIndicator.stopAnimating()
+                    self?.view.isUserInteractionEnabled = true
+                }
+            }
+            .store(in: &cancellables)
         
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
-    
-    // MARK: - todo: 로그아웃 로직 구현하기
-    private func handleLogout() {
-        do {
-            try Auth.auth().signOut()
-            print("로그아웃 성공")
-        } catch  {
-            print("로그아웃 실패: \(error)")
-        }
+        viewModel.$alertMessage
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                let alert = UIAlertController(title: "알림", message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self?.present(alert, animated: true)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$isNotificationOn
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isOn in
+                self?.settingView.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.didLinkGoogleAccount
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                self.settingView.tableView.reloadData()
+                
+                let alert = UIAlertController(title: "성공", message: "Google 계정과 성공적으로 연동되었습니다!", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(alert, animated: true)
+            }
+            .store(in: &cancellables)
     }
 }
 
 extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : 2
+        if section == 0 { return 1 }
+        if section == 1 {
+            return viewModel.isNotificationOn ? 2 : 1
+        }
+        return 2
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -68,34 +100,91 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
+        cell.accessoryView = nil
+        cell.accessoryType = .none
+        cell.selectionStyle = .none
+        cell.textLabel?.textColor = .label
+        
         if indexPath.section == 0 {
-            cell.textLabel?.text = "로그아웃 / 데이터 초기화"
-            cell.textLabel?.textColor = .systemRed
-        } else {
+            let status = viewModel.checkCurrentProvider()
+            
+            if status == "익명 사용자" {
+                cell.textLabel?.text = "Google 계정 연동하기"
+                cell.textLabel?.textColor = .systemBlue
+                cell.accessoryType = .disclosureIndicator
+                cell.selectionStyle = .default
+            } else {
+                cell.textLabel?.text = "현재 계정: \(status)"
+                cell.textLabel?.textColor = .label
+                cell.accessoryType = .checkmark
+                cell.selectionStyle = .none
+            }
+            return cell
+        }
+        
+        if indexPath.section == 1 {
             if indexPath.row == 0 {
-                cell.textLabel?.text = "버전 정보"
+                cell.textLabel?.text = "일기 작성 알림"
+                
+                let switchControl = UISwitch()
+                switchControl.isOn = viewModel.isNotificationOn
+                switchControl.addTarget(self, action: #selector(didToggleSwitch(_:)), for: .valueChanged)
+                cell.accessoryView = switchControl
+                
+            } else {
+                cell.textLabel?.text = "알림 시간"
+                
+                let datePicker = UIDatePicker()
+                datePicker.datePickerMode = .time
+                datePicker.preferredDatePickerStyle = .compact
+                datePicker.date = viewModel.notificationTime
+                datePicker.addTarget(self, action: #selector(didChangeTime(_:)), for: .valueChanged)
+                cell.accessoryView = datePicker
+            }
+            return cell
+        }
+        
+        if indexPath.section == 2 {
+            cell.textLabel?.text = indexPath.row == 0 ? "버전 정보" : "문의하기"
+            
+            if indexPath.row == 0 {
                 let versionLabel = UILabel()
                 versionLabel.text = "1.0.0"
                 versionLabel.textColor = .secondaryLabel
+                versionLabel.font = .systemFont(ofSize: 16)
                 versionLabel.sizeToFit()
                 cell.accessoryView = versionLabel
             } else {
-                cell.textLabel?.text = "문의하기"
                 cell.accessoryType = .disclosureIndicator
+                cell.selectionStyle = .default
             }
+            return cell
         }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 && indexPath.row == 0 {
-            let alert = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까? 익명 사용자의 경우 데이터가 사라질 수 있습니다.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-            alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
-                self.handleLogout()
-            }))
-            present(alert, animated: true)
+        
+        if indexPath.section == 0 {
+            let status = viewModel.checkCurrentProvider()
+            if status == "익명 로그인 사용자" {
+                viewModel.linkGoogleAccount(presenting: self)
+            }
         }
+        
+        if indexPath.section == 2 && indexPath.row == 1 {
+            // 문의하기 클릭 시 동작 (이메일 보내기 등 추후 구현)
+            print("문의하기 클릭됨")
+        }
+    }
+    
+    @objc private func didToggleSwitch(_ sender: UISwitch) {
+        viewModel.toggleNotification(isOn: sender.isOn)
+    }
+    
+    @objc private func didChangeTime(_ sender: UIDatePicker) {
+        viewModel.updateNotificationTime(date: sender.date)
     }
 }

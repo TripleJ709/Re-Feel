@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomeHeaderView: UIView {
+final class HomeHeaderView: UIView {
     
     private let containerView: UIView = {
         let view = UIView()
@@ -63,20 +63,22 @@ class HomeHeaderView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         countLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        let trailingConstraint = containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
+        let bottomConstraint = containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
+        trailingConstraint.priority = UILayoutPriority(999)
+        bottomConstraint.priority = UILayoutPriority(999)
+        
         NSLayoutConstraint.activate([
-            // 카드 위치 (양옆 여백)
             containerView.topAnchor.constraint(equalTo: topAnchor, constant: 10),
             containerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            containerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            containerView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
+            trailingConstraint,
+            bottomConstraint,
             
-            // 장식 아이콘 (오른쪽 구석에 크게)
             iconImageView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
             iconImageView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
             iconImageView.widthAnchor.constraint(equalToConstant: 60),
             iconImageView.heightAnchor.constraint(equalToConstant: 60),
             
-            // 텍스트들 (왼쪽 정렬)
             titleLabel.topAnchor.constraint(equalTo: containerView.topAnchor, constant: 24),
             titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             

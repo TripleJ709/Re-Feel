@@ -11,6 +11,7 @@
 		893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288F92F1B6DB600D216C9 /* EmotionRepository.swift */; };
 		893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */; };
 		893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FD2F1B721D00D216C9 /* HomeView.swift */; };
+		894DFFBF2F2CA2E000E85CCF /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */; };
 		897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22622F1B84EB00EFF62E /* AddEmotionView.swift */; };
 		897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */; };
 		897E47AB2F1A0E4300873F31 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 897E47A22F1A0E4300873F31 /* Assets.xcassets */; };
@@ -25,6 +26,8 @@
 		897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */; };
 		89A60B142F28C73800168ED7 /* HomeEmptyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B132F28C73800168ED7 /* HomeEmptyView.swift */; };
 		89A60B172F28D6DD00168ED7 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */; };
+		89A60B192F2B39FA00168ED7 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B182F2B39FA00168ED7 /* SettingView.swift */; };
+		89A60B1B2F2B3B8100168ED7 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B1A2F2B3B8100168ED7 /* SettingViewModel.swift */; };
 		89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */; };
 		89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */; };
 		89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */; };
@@ -49,6 +52,7 @@
 		893288F92F1B6DB600D216C9 /* EmotionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionRepository.swift; sourceTree = "<group>"; };
 		893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		893288FD2F1B721D00D216C9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		897D22622F1B84EB00EFF62E /* AddEmotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionView.swift; sourceTree = "<group>"; };
 		897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionViewModel.swift; sourceTree = "<group>"; };
 		897E47892F19F93100873F31 /* ReFeel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReFeel.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +69,8 @@
 		897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+.swift"; sourceTree = "<group>"; };
 		89A60B132F28C73800168ED7 /* HomeEmptyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeEmptyView.swift; sourceTree = "<group>"; };
 		89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
+		89A60B182F2B39FA00168ED7 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
+		89A60B1A2F2B3B8100168ED7 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
 		89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTransforming.swift; sourceTree = "<group>"; };
 		89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenModel.swift; sourceTree = "<group>"; };
 		89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GptEmotionTransformer.swift; sourceTree = "<group>"; };
@@ -98,12 +104,18 @@
 		893288F62F1B6D2D00D216C9 /* Emotion */ = {
 			isa = PBXGroup;
 			children = (
-				89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */,
 				89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */,
-				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
 				893288F92F1B6DB600D216C9 /* EmotionRepository.swift */,
 			);
 			path = Emotion;
+			sourceTree = "<group>";
+		};
+		894DFFBD2F2CA21600E85CCF /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 		897E47802F19F93100873F31 = {
@@ -132,7 +144,7 @@
 				897E47B92F1A0F0300873F31 /* Presentation */,
 				897E47BB2F1A0F1100873F31 /* Domain */,
 				897E47BC2F1A0F1800873F31 /* Data */,
-				897E47BD2F1A0F1D00873F31 /* Network */,
+				894DFFBD2F2CA21600E85CCF /* Service */,
 				897E47B82F1A0EDF00873F31 /* Resource */,
 			);
 			path = ReFeel;
@@ -164,6 +176,8 @@
 				89EAFE1C2F262B33007BEC32 /* TabBar */,
 				89EAFDCB2F20DD2D007BEC32 /* Login */,
 				897E47BF2F1A101500873F31 /* Home */,
+				89EAFE1F2F274330007BEC32 /* Detail */,
+				897E47C42F1A155A00873F31 /* AddEmotion */,
 				89EAFE192F2628BB007BEC32 /* Setting */,
 			);
 			path = Presentation;
@@ -182,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				893288F62F1B6D2D00D216C9 /* Emotion */,
+				897E47BD2F1A0F1D00873F31 /* Network */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -199,9 +214,7 @@
 				893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */,
 				893288FD2F1B721D00D216C9 /* HomeView.swift */,
 				897E47C02F1A10B600873F31 /* HomeViewController.swift */,
-				89A60B152F28D6BA00168ED7 /* OtherView */,
-				89EAFE1F2F274330007BEC32 /* Detail */,
-				897E47C42F1A155A00873F31 /* AddEmotion */,
+				89A60B152F28D6BA00168ED7 /* Views */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -218,6 +231,8 @@
 		897E47C32F1A142700873F31 /* Protocol */ = {
 			isa = PBXGroup;
 			children = (
+				89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */,
+				893288F72F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -240,14 +255,14 @@
 			path = Extension;
 			sourceTree = "<group>";
 		};
-		89A60B152F28D6BA00168ED7 /* OtherView */ = {
+		89A60B152F28D6BA00168ED7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				89A60B132F28C73800168ED7 /* HomeEmptyView.swift */,
 				897E47C92F1A180C00873F31 /* HomeEmotionCell.swift */,
 				89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */,
 			);
-			path = OtherView;
+			path = Views;
 			sourceTree = "<group>";
 		};
 		89EAFDCB2F20DD2D007BEC32 /* Login */ = {
@@ -261,6 +276,8 @@
 		89EAFE192F2628BB007BEC32 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				89A60B1A2F2B3B8100168ED7 /* SettingViewModel.swift */,
+				89A60B182F2B39FA00168ED7 /* SettingView.swift */,
 				89EAFE1A2F262963007BEC32 /* SettingViewController.swift */,
 			);
 			path = Setting;
@@ -386,11 +403,14 @@
 				897E47B62F1A0EC300873F31 /* AppDelegate.swift in Sources */,
 				893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */,
 				897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */,
+				89A60B1B2F2B3B8100168ED7 /* SettingViewModel.swift in Sources */,
 				89A60B172F28D6DD00168ED7 /* HomeHeaderView.swift in Sources */,
+				894DFFBF2F2CA2E000E85CCF /* NotificationManager.swift in Sources */,
 				897E47B72F1A0EC300873F31 /* SceneDelegate.swift in Sources */,
 				897E47C12F1A10B600873F31 /* HomeViewController.swift in Sources */,
 				89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */,
 				89EAFE212F274346007BEC32 /* DetailViewModel.swift in Sources */,
+				89A60B192F2B39FA00168ED7 /* SettingView.swift in Sources */,
 				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
 				89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */,
 				89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */,
