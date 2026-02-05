@@ -14,4 +14,11 @@ extension DateFormatter {
         formatter.dateStyle = .short
         return formatter
     }()
+    
+    static let yyyyMMdd: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy년 M월 d일"
+        formatter.locale = Locale(identifier: "ko_KR")
+        return formatter
+    }()
 }
