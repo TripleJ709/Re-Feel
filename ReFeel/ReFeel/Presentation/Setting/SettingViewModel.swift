@@ -8,8 +8,7 @@
 import Foundation
 import Combine
 import FirebaseAuth
-import FirebaseFirestore
-import GoogleSignIn
+import UIKit
 
 // MARK: - TODO: APPLE로그인 추가할 땐 AuthService파일 따로 만들어서 관리하기(지금은 구글로그인 하나라 VM이 뚱뚱하지 않음)
 final class SettingViewModel {
@@ -20,56 +19,44 @@ final class SettingViewModel {
     
     private let kIsNotificationOn = "isNotificationOn"
     private let kNotificationTime = "notificationTime"
+    private var cancellables = Set<AnyCancellable>()
     
-    let didLinkGoogleAccount = PassthroughSubject<Void, Never>()
+    let didLinkAccount = PassthroughSubject<Void, Never>()
     
     init() {
         loadNotificationSettings()
     }
     
-    func linkGoogleAccount(presenting: UIViewController) {
+    func linkGoogle(presenting: UIViewController) {
         isLoading = true
         
-        GIDSignIn.sharedInstance.signIn(withPresenting: presenting) { [weak self] result, error in
-            guard let self else { return }
-            
-            if let error {
-                self.isLoading = false
-                self.alertMessage = "구글 로그인 실패: \(error.localizedDescription)"
-                return
-            }
-            
-            guard let user = result?.user,
-                  let idToken = user.idToken?.tokenString else {
-                self.isLoading = false
-                return
-            }
-            
-            let accessToken = user.accessToken.tokenString
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
-            
-            Auth.auth().currentUser?.link(with: credential) { authResult, error in
-                self.isLoading = false
-                
-                if let error {
-                    self.alertMessage = "연동 실패: \(error.localizedDescription)"
-                    return
+        AuthService.shared.linkGoogle(presenting: presenting)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.isLoading = false
+                if case .failure(let error) = completion {
+                    self?.alertMessage = "구글 연동 실패: \(error.localizedDescription)"
                 }
-                
-                if let user = authResult?.user, let email = user.email {
-                    let db = Firestore.firestore()
-                    db.collection("users").document(user.uid).setData([
-                        "email": email,
-                        "provider": "google"
-                    ], merge: true)
-                }
-                
-                Auth.auth().currentUser?.reload { _ in
-                    self.isLoading = false
-                    self.didLinkGoogleAccount.send(())
-                }
+            } receiveValue: { [weak self] user in
+                self?.didLinkAccount.send(())
             }
-        }
+            .store(in: &cancellables)
+    }
+    
+    func linkApple(window: UIWindow) {
+        isLoading = true
+        
+        AuthService.shared.linkApple(window: window)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.isLoading = false
+                if case .failure(let error) = completion {
+                    self?.alertMessage = "애플 연동 실패: \(error.localizedDescription)"
+                }
+            } receiveValue: { [weak self] user in
+                self?.didLinkAccount.send(())
+            }
+            .store(in: &cancellables)
     }
     
     func checkCurrentProvider() -> String {
@@ -77,8 +64,9 @@ final class SettingViewModel {
         if user.isAnonymous {
             return "익명 로그인 사용자"
         } else {
-            if let provider = user.providerData.first?.providerID, provider == "google.com" {
-                return "Google 계정"
+            if let provider = user.providerData.first?.providerID {
+                if provider == "google.com" { return "Google 계정" }
+                if provider == "apple.com" { return "Apple 계정" }
             }
             return "이메일 계정(없음)"
         }

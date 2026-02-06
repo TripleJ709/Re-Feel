@@ -65,18 +65,33 @@ final class SettingViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.didLinkGoogleAccount
+        viewModel.didLinkAccount
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
                 
                 self.settingView.tableView.reloadData()
                 
-                let alert = UIAlertController(title: "성공", message: "Google 계정과 성공적으로 연동되었습니다!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "성공", message: "계정이 성공적으로 연동되었습니다!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true)
             }
             .store(in: &cancellables)
+    }
+    
+    private func showLinkAccountActionSheet() {
+        let alert = UIAlertController(title: "계정 연동", message: "데이터를 안전하게 보관할 계정을 선택하세요.", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Google로 계속하기", style: .default, handler: { _ in
+            self.viewModel.linkGoogle(presenting: self)
+        }))
+        alert.addAction(UIAlertAction(title: "Apple로 계속하기", style: .default, handler: { _ in
+            if let window = self.view.window {
+                self.viewModel.linkApple(window: window)
+            }
+        }))
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        
+        present(alert, animated: true)
     }
 }
 
@@ -94,7 +109,7 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "계정 관리" : "앱 정보"
+        return section == 0 ? "계정 관리" : (section == 1 ? "알림 설정" : "앱 정보")
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -109,7 +124,7 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             let status = viewModel.checkCurrentProvider()
             
             if status == "익명 사용자" {
-                cell.textLabel?.text = "Google 계정 연동하기"
+                cell.textLabel?.text = "계정 연동하기"
                 cell.textLabel?.textColor = .systemBlue
                 cell.accessoryType = .disclosureIndicator
                 cell.selectionStyle = .default
@@ -170,7 +185,7 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
         if indexPath.section == 0 {
             let status = viewModel.checkCurrentProvider()
             if status == "익명 로그인 사용자" {
-                viewModel.linkGoogleAccount(presenting: self)
+                showLinkAccountActionSheet()
             }
         }
         
