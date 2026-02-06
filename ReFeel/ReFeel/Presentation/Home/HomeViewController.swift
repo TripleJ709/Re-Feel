@@ -39,7 +39,7 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemGroupedBackground
+        //view.backgroundColor = .systemGroupedBackground
         homeView.tableView.backgroundColor = .clear
         homeView.tableView.separatorStyle = .none
         homeView.tableView.sectionHeaderHeight = 50
