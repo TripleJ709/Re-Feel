@@ -114,6 +114,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         let titleLabel = UILabel()
         titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
         titleLabel.textColor = .label
+        titleLabel.textColor = .white
         
         let sectionDate = viewModel.sections[section].date
         let formatter = DateFormatter()
