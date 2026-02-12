@@ -34,6 +34,11 @@ final class DetailViewController: UIViewController {
     }
 
     private func setupNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.tintColor = .white
         let deleteButton = UIBarButtonItem(image: UIImage(systemName: "trash"), style: .plain, target: self, action: #selector(deleteButtonTapped))
         deleteButton.tintColor = .systemRed
         navigationItem.rightBarButtonItem = deleteButton
