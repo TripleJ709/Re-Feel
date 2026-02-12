@@ -8,15 +8,19 @@
 import UIKit
 
 final class SettingView: UIView {
+    
     let tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .insetGrouped)
         tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tv.backgroundColor = .systemGroupedBackground
+        tv.backgroundColor = .clear
+        tv.separatorStyle = .singleLine
+        tv.separatorColor = .white.withAlphaComponent(0.2)
         return tv
     }()
     
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .white
         indicator.hidesWhenStopped = true
         return indicator
     }()
@@ -31,8 +35,14 @@ final class SettingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setSpaceGradientBackground()
+        addTwinklingStars()
+    }
+    
     private func setupUI() {
-        backgroundColor = .systemGroupedBackground
+        backgroundColor = .black
     }
     
     private func setupLayout() {

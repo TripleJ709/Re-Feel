@@ -108,29 +108,39 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
         return 2
     }
     
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        guard let header = view as? UITableViewHeaderFooterView else { return }
+        header.textLabel?.textColor = UIColor.white.withAlphaComponent(0.6)
+        header.textLabel?.font = .systemFont(ofSize: 14, weight: .semibold)
+    }
+    
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return section == 0 ? "계정 관리" : (section == 1 ? "알림 설정" : "앱 정보")
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.backgroundColor = UIColor.white.withAlphaComponent(0.1)
         
+        let selectedView = UIView()
+        selectedView.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+        cell.selectedBackgroundView = selectedView
+        cell.textLabel?.textColor = .white
+        cell.tintColor = .white
         cell.accessoryView = nil
         cell.accessoryType = .none
-        cell.selectionStyle = .none
-        cell.textLabel?.textColor = .label
         
         if indexPath.section == 0 {
             let status = viewModel.checkCurrentProvider()
             
             if status == "익명 사용자" {
                 cell.textLabel?.text = "계정 연동하기"
-                cell.textLabel?.textColor = .systemBlue
+                cell.textLabel?.textColor = UIColor(red: 0.4, green: 0.8, blue: 1.0, alpha: 1.0)
                 cell.accessoryType = .disclosureIndicator
                 cell.selectionStyle = .default
             } else {
                 cell.textLabel?.text = "현재 계정: \(status)"
-                cell.textLabel?.textColor = .label
+                cell.textLabel?.textColor = .white
                 cell.accessoryType = .checkmark
                 cell.selectionStyle = .none
             }
@@ -144,7 +154,9 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 let switchControl = UISwitch()
                 switchControl.isOn = viewModel.isNotificationOn
                 switchControl.addTarget(self, action: #selector(didToggleSwitch(_:)), for: .valueChanged)
+                switchControl.onTintColor = .systemPurple
                 cell.accessoryView = switchControl
+                cell.selectionStyle = .none
                 
             } else {
                 cell.textLabel?.text = "알림 시간"
@@ -154,7 +166,10 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 datePicker.preferredDatePickerStyle = .compact
                 datePicker.date = viewModel.notificationTime
                 datePicker.addTarget(self, action: #selector(didChangeTime(_:)), for: .valueChanged)
+                datePicker.overrideUserInterfaceStyle = .dark
+                datePicker.tintColor = .systemPurple
                 cell.accessoryView = datePicker
+                cell.selectionStyle = .none
             }
             return cell
         }
@@ -165,7 +180,7 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             if indexPath.row == 0 {
                 let versionLabel = UILabel()
                 versionLabel.text = "1.0.0"
-                versionLabel.textColor = .secondaryLabel
+                versionLabel.textColor = .lightGray
                 versionLabel.font = .systemFont(ofSize: 16)
                 versionLabel.sizeToFit()
                 cell.accessoryView = versionLabel

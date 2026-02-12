@@ -43,9 +43,7 @@ final class HomeView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         setSpaceGradientBackground()
-        if self.layer.sublayers?.first(where: {$0.name == "starLayer"}) == nil {
-            addTwinklingStars()
-        }
+        addTwinklingStars()
     }
     
     private func setupUI() {
@@ -72,47 +70,5 @@ final class HomeView: UIView {
             addViewButton.widthAnchor.constraint(equalToConstant: 140),
             addViewButton.heightAnchor.constraint(equalToConstant: 50)
         ])
-    }
-    
-    private func addTwinklingStars() {
-        let starCount = 30
-        
-        for _ in 0..<starCount {
-            let starSize = CGFloat.random(in: 2...5)
-            let star = UIView()
-            star.backgroundColor = .white
-            star.layer.cornerRadius = starSize / 2
-            star.clipsToBounds = true
-            star.alpha = 0.3
-            star.layer.name = "starLayer"
-            
-            let screenWidth = UIScreen.main.bounds.width
-            let screenHeight = UIScreen.main.bounds.height
-            
-            let randomX = CGFloat.random(in: 0...screenWidth)
-            let randomY = CGFloat.random(in: 0...screenHeight)
-            
-            star.frame = CGRect(x: randomX, y: randomY, width: starSize, height: starSize)
-            
-            self.insertSubview(star, at: 1)
-            
-            animateStar(star)
-        }
-    }
-    
-    private func animateStar(_ star: UIView) {
-        let duration = Double.random(in: 1.5...3.0)
-        let delay = Double.random(in: 0.0...1.5)
-        
-        UIView.animate(
-            withDuration: duration,
-            delay: delay,
-            options: [.repeat, .autoreverse, .curveEaseInOut, .allowUserInteraction],
-            animations: {
-                star.alpha = 1.0
-                star.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-            },
-            completion: nil
-        )
     }
 }
