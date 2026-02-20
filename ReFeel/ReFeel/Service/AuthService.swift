@@ -89,7 +89,7 @@ final class AuthService: NSObject {
                 "provider": provider,
                 "email": email ?? user.email ?? "비공개"
             ]
-            db.collection("user").document(user.uid).setData(data, merge: true)
+            db.collection("users").document(user.uid).setData(data, merge: true)
             promise(.success(user))
         }
     }

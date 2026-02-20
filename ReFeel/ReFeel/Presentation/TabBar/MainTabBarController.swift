@@ -8,7 +8,6 @@
 import UIKit
 
 final class MainTabBarController: UITabBarController {
-    private let customHeight: CGFloat = 90
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,21 +17,17 @@ final class MainTabBarController: UITabBarController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        var tabFrame = tabBar.frame
-        tabFrame.size.height = customHeight
-        tabFrame.origin.y = view.frame.height - customHeight
-        tabBar.frame = tabFrame
+        // 탭바 선과 그림자를 제거하여 투명하게 유지
         tabBar.layer.shadowOpacity = 0
         tabBar.layer.borderWidth = 0
     }
     
-    // MARK: - TODO: 탭바 사용하면 배경 색이 바뀜 - 해결해야 하는데 아직 안되는 중
+    // MARK: - TODO: 탭바 사용하면 배경 색이 바뀜
     private func setupStyle() {
         let appearance = UITabBarAppearance()
         appearance.configureWithTransparentBackground()
         appearance.backgroundEffect = UIBlurEffect(style: .systemUltraThinMaterialDark)
-        appearance.backgroundColor = nil
-        appearance.shadowColor = .clear
+        appearance.backgroundColor = .clear
         
         let itemAppearance = UITabBarItemAppearance()
         itemAppearance.selected.iconColor = .white
@@ -51,7 +46,9 @@ final class MainTabBarController: UITabBarController {
         appearance.compactInlineLayoutAppearance = itemAppearance
         
         tabBar.standardAppearance = appearance
-        tabBar.scrollEdgeAppearance = appearance
+        if #available(iOS 15.0, *) {
+            tabBar.scrollEdgeAppearance = appearance
+        }
         
         tabBar.isTranslucent = true
     }

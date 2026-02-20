@@ -163,10 +163,7 @@ final class DetailView: UIView {
     }
     
     func configure(with emotion: Emotion) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월 d일 EEEE"
-        formatter.locale = Locale(identifier: "ko_KR")
-        dateLabel.text = formatter.string(from: emotion.createdAt)
+        dateLabel.text = DateFormatter.MMddEEEE.string(from: emotion.createdAt)
         
         let style = NSMutableParagraphStyle()
         style.lineSpacing = 6

@@ -10,7 +10,6 @@ import Combine
 import FirebaseAuth
 import UIKit
 
-// MARK: - TODO: APPLE로그인 추가할 땐 AuthService파일 따로 만들어서 관리하기(지금은 구글로그인 하나라 VM이 뚱뚱하지 않음)
 final class SettingViewModel {
     @Published var isLoading: Bool = false
     @Published var alertMessage: String?

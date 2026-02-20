@@ -117,9 +117,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         titleLabel.textColor = .white
         
         let sectionDate = viewModel.sections[section].date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy년 M월"
-        titleLabel.text = formatter.string(from: sectionDate)
+        titleLabel.text = DateFormatter.yyyyMM.string(from: sectionDate)
         
         headerView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
