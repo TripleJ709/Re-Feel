@@ -10,11 +10,10 @@ import UIKit
 final class SettingView: UIView {
     
     let tableView: UITableView = {
-        let tv = UITableView(frame: .zero, style: .insetGrouped)
-        tv.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        let tv = UITableView(frame: .zero, style: .grouped)
         tv.backgroundColor = .clear
-        tv.separatorStyle = .singleLine
-        tv.separatorColor = .white.withAlphaComponent(0.2)
+        tv.separatorStyle = .none
+        tv.showsVerticalScrollIndicator = false
         return tv
     }()
     

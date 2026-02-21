@@ -73,24 +73,60 @@ final class AuthService: NSObject {
     }
     
     private func linkToFirebase(credential: AuthCredential, provider: String, email: String?, promise: @escaping (Result<User, Error>) -> Void) {
-        Auth.auth().currentUser?.link(with: credential) { authResult, error in
-            if let error {
-                promise(.failure(error))
-                return
+        if let currentUser = Auth.auth().currentUser, currentUser.isAnonymous {
+            currentUser.link(with: credential) { authResult, error in
+                if let error = error as NSError? {
+                    if error.code == AuthErrorCode.credentialAlreadyInUse.rawValue {
+                        Auth.auth().signIn(with: credential) { signInResult, signInError in
+                            if let signInError = signInError {
+                                promise(.failure(signInError))
+                                return
+                            }
+                            if let user = signInResult?.user {
+                                promise(.success(user))
+                            } else {
+                                promise(.failure(AuthError.firebaseLinkFailed))
+                            }
+                        }
+                        return
+                    }
+                    promise(.failure(error))
+                    return
+                }
+                
+                guard let user = authResult?.user else {
+                    promise(.failure(AuthError.firebaseLinkFailed))
+                    return
+                }
+                
+                let db = Firestore.firestore()
+                let data: [String: Any] = [
+                    "provider": provider,
+                    "email": email ?? user.email ?? "비공개"
+                ]
+                db.collection("users").document(user.uid).setData(data, merge: true)
+                promise(.success(user))
             }
-            
-            guard let user = authResult?.user else {
-                promise(.failure(AuthError.firebaseLinkFailed))
-                return
+        } else {
+            Auth.auth().signIn(with: credential) { authResult, error in
+                if let error {
+                    promise(.failure(error))
+                    return
+                }
+                
+                guard let user = authResult?.user else {
+                    promise(.failure(AuthError.firebaseLinkFailed))
+                    return
+                }
+                
+                let db = Firestore.firestore()
+                let data: [String: Any] = [
+                    "provider": provider,
+                    "email": email ?? user.email ?? "비공개"
+                ]
+                db.collection("users").document(user.uid).setData(data, merge: true)
+                promise(.success(user))
             }
-            
-            let db = Firestore.firestore()
-            let data: [String: Any] = [
-                "provider": provider,
-                "email": email ?? user.email ?? "비공개"
-            ]
-            db.collection("users").document(user.uid).setData(data, merge: true)
-            promise(.success(user))
         }
     }
 }
