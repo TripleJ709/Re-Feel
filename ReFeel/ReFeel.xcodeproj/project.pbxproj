@@ -11,6 +11,7 @@
 		893288FA2F1B6DB600D216C9 /* EmotionRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288F92F1B6DB600D216C9 /* EmotionRepository.swift */; };
 		893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */; };
 		893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893288FD2F1B721D00D216C9 /* HomeView.swift */; };
+		893952DF2F49D6700046973B /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893952DE2F49D6700046973B /* LoginViewController.swift */; };
 		894DFFBF2F2CA2E000E85CCF /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */; };
 		897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22622F1B84EB00EFF62E /* AddEmotionView.swift */; };
 		897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */; };
@@ -28,6 +29,9 @@
 		89A60B172F28D6DD00168ED7 /* HomeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */; };
 		89A60B192F2B39FA00168ED7 /* SettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B182F2B39FA00168ED7 /* SettingView.swift */; };
 		89A60B1B2F2B3B8100168ED7 /* SettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A60B1A2F2B3B8100168ED7 /* SettingViewModel.swift */; };
+		89A73F592F34ADE20009EE7A /* CryptoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A73F582F34ADE20009EE7A /* CryptoUtils.swift */; };
+		89A73F5B2F34AEDF0009EE7A /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A73F5A2F34AEDF0009EE7A /* AuthService.swift */; };
+		89A73F5D2F35ECA60009EE7A /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A73F5C2F35ECA60009EE7A /* UIView+.swift */; };
 		89BDC4F72F1DDBEF00D14806 /* EmotionTransforming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */; };
 		89BDC4FB2F1DFCBE00D14806 /* OpenModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */; };
 		89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */; };
@@ -52,6 +56,7 @@
 		893288F92F1B6DB600D216C9 /* EmotionRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionRepository.swift; sourceTree = "<group>"; };
 		893288FB2F1B6EFB00D216C9 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		893288FD2F1B721D00D216C9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		893952DE2F49D6700046973B /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		897D22622F1B84EB00EFF62E /* AddEmotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionView.swift; sourceTree = "<group>"; };
 		897D22642F1B850100EFF62E /* AddEmotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEmotionViewModel.swift; sourceTree = "<group>"; };
@@ -71,6 +76,10 @@
 		89A60B162F28D6DD00168ED7 /* HomeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeHeaderView.swift; sourceTree = "<group>"; };
 		89A60B182F2B39FA00168ED7 /* SettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingView.swift; sourceTree = "<group>"; };
 		89A60B1A2F2B3B8100168ED7 /* SettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewModel.swift; sourceTree = "<group>"; };
+		89A73F572F34AD880009EE7A /* ReFeel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ReFeel.entitlements; sourceTree = "<group>"; };
+		89A73F582F34ADE20009EE7A /* CryptoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoUtils.swift; sourceTree = "<group>"; };
+		89A73F5A2F34AEDF0009EE7A /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		89A73F5C2F35ECA60009EE7A /* UIView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		89BDC4F62F1DDBEF00D14806 /* EmotionTransforming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionTransforming.swift; sourceTree = "<group>"; };
 		89BDC4FA2F1DFCBE00D14806 /* OpenModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenModel.swift; sourceTree = "<group>"; };
 		89BDC4FC2F1DFDA400D14806 /* GptEmotionTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GptEmotionTransformer.swift; sourceTree = "<group>"; };
@@ -114,6 +123,7 @@
 			isa = PBXGroup;
 			children = (
 				894DFFBE2F2CA2E000E85CCF /* NotificationManager.swift */,
+				89A73F5A2F34AEDF0009EE7A /* AuthService.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -137,6 +147,7 @@
 		897E47AA2F1A0E4300873F31 /* ReFeel */ = {
 			isa = PBXGroup;
 			children = (
+				89A73F572F34AD880009EE7A /* ReFeel.entitlements */,
 				89EAFDBD2F20DAA0007BEC32 /* GoogleService-Info.plist */,
 				89EAFDB92F1F8C79007BEC32 /* Secrets.swift */,
 				897E47A32F1A0E4300873F31 /* Info.plist */,
@@ -251,6 +262,8 @@
 			isa = PBXGroup;
 			children = (
 				897E47CC2F1A1B9100873F31 /* DateFormatter+.swift */,
+				89A73F582F34ADE20009EE7A /* CryptoUtils.swift */,
+				89A73F5C2F35ECA60009EE7A /* UIView+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -269,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				89EAFDCC2F20DD4A007BEC32 /* LoginLoadingViewController.swift */,
+				893952DE2F49D6700046973B /* LoginViewController.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -399,9 +413,12 @@
 				897D22632F1B84EB00EFF62E /* AddEmotionView.swift in Sources */,
 				897D22652F1B850100EFF62E /* AddEmotionViewModel.swift in Sources */,
 				897E47C82F1A166A00873F31 /* Emotion.swift in Sources */,
+				893952DF2F49D6700046973B /* LoginViewController.swift in Sources */,
+				89A73F592F34ADE20009EE7A /* CryptoUtils.swift in Sources */,
 				893288FC2F1B6EFB00D216C9 /* HomeViewModel.swift in Sources */,
 				897E47B62F1A0EC300873F31 /* AppDelegate.swift in Sources */,
 				893288FE2F1B721D00D216C9 /* HomeView.swift in Sources */,
+				89A73F5D2F35ECA60009EE7A /* UIView+.swift in Sources */,
 				897E47CD2F1A1B9100873F31 /* DateFormatter+.swift in Sources */,
 				89A60B1B2F2B3B8100168ED7 /* SettingViewModel.swift in Sources */,
 				89A60B172F28D6DD00168ED7 /* HomeHeaderView.swift in Sources */,
@@ -413,6 +430,7 @@
 				89A60B192F2B39FA00168ED7 /* SettingView.swift in Sources */,
 				897E47CA2F1A180C00873F31 /* HomeEmotionCell.swift in Sources */,
 				89EAFE1B2F262963007BEC32 /* SettingViewController.swift in Sources */,
+				89A73F5B2F34AEDF0009EE7A /* AuthService.swift in Sources */,
 				89BDC4FD2F1DFDA400D14806 /* GptEmotionTransformer.swift in Sources */,
 				893288F82F1B6D6900D216C9 /* EmotionRepositoryProtocol.swift in Sources */,
 			);
@@ -445,6 +463,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ReFeel/ReFeel.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K4Y3BP25BV;
@@ -477,6 +496,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ReFeel/ReFeel.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = K4Y3BP25BV;

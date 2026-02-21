@@ -12,19 +12,21 @@ final class HomeEmotionCell: UITableViewCell {
     
     private let containerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .white
-        view.layer.cornerRadius = 16
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.15)
+        view.layer.cornerRadius = 20
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.white.withAlphaComponent(0.3).cgColor
         view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.1
+        view.layer.shadowOpacity = 0.2
         view.layer.shadowOffset = CGSize(width: 0, height: 4)
-        view.layer.shadowRadius = 8
+        view.layer.shadowRadius = 10
         return view
     }()
     
     private let dateLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 12, weight: .semibold)
-        label.textColor = .systemGray
+        label.textColor = .lightGray
         return label
     }()
     
@@ -32,17 +34,23 @@ final class HomeEmotionCell: UITableViewCell {
         let label = UILabel()
         label.numberOfLines = 3
         label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.textColor = .label
+        label.textColor = .white
         return label
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
         setupLayout()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupUI() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
     }
     
     private func setupLayout() {

@@ -21,38 +21,97 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        window.rootViewController = LoginLoadingViewController()
+        let loadingVC = LoginLoadingViewController()
+        loadingVC.onRetryButtonTapped = { [weak self] in
+            print("로그인 재시도 버튼 탭")
+            self?.checkLoginFlow()
+        }
+        window.rootViewController = loadingVC
         window.makeKeyAndVisible()
         
         checkLoginFlow()
     }
     
+    func restartLoginFlow() {
+        let loadingVC = LoginLoadingViewController()
+        loadingVC.onRetryButtonTapped = { [weak self] in
+            self?.checkLoginFlow()
+        }
+        guard let window = self.window else { return }
+        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+            window.rootViewController = loadingVC
+        }, completion: { [weak self] _ in
+            self?.checkLoginFlow()
+        })
+    }
+    
     private func checkLoginFlow() {
         if let user = Auth.auth().currentUser {
             print("기존 유저 - UID: \(user.uid)")
-            changeRootToHome(userId: user.uid)
+            
+            user.reload { [weak self] error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    let errCode = (error as NSError).code
+                    
+                    if errCode == AuthErrorCode.userNotFound.rawValue || errCode == AuthErrorCode.userTokenExpired.rawValue {
+                        print("유저가 삭제되었거나 만료됨. 강제 로그아웃 후 익명 로그인 재시도")
+                        try? Auth.auth().signOut()
+                        self.signInAnonymously()
+                    } else {
+                        print("유저 갱신 실패 (기타 에러): \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            self.changeRootToHome(userId: user.uid)
+                        }
+                    }
+                } else {
+                    print("유저 상태 갱신 성공 (정상 유저)")
+                    DispatchQueue.main.async {
+                        self.changeRootToHome(userId: user.uid)
+                    }
+                }
+            }
         } else {
-            print("유저 정보 없음. 익명 로그인 시도")
+            print("유저 정보 없음 (첫 진입 등). 익명 로그인 시도")
             signInAnonymously()
         }
     }
     
-    // MARK: - Todo: 로그인 실패시 재시도 버튼 만들기
+    func showLoginScreen() {
+        DispatchQueue.main.async {
+            guard let window = self.window else { return }
+            let loginVC = LoginViewController()
+            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
+                window.rootViewController = loginVC
+            }, completion: nil)
+        }
+    }
+
     private func signInAnonymously() {
         Auth.auth().signInAnonymously { [weak self] authResult, error in
-            if let error {
+            guard let self = self else { return }
+            
+            if let error = error {
                 print("로그인 실패 \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    if let loadingVC = self.window?.rootViewController as? LoginLoadingViewController {
+                        loadingVC.showFailureState(errorDescription: error.localizedDescription)
+                    }
+                }
                 return
             }
             
             if let user = authResult?.user {
                 print("익명 로그인 성공 - UID: \(user.uid)")
-                self?.changeRootToHome(userId: user.uid)
+                DispatchQueue.main.async {
+                    self.changeRootToHome(userId: user.uid)
+                }
             }
         }
     }
     
-    private func changeRootToHome(userId: String) {
+    func changeRootToHome(userId: String) {
         let repository = EmotionRepository(userId: userId)
         let transformer = GptEmotionTransformer()
         
@@ -72,25 +131,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
             window.rootViewController = tabBarController
         }, completion: nil)
-        
-        
-        
-        
-        
-        
-        
-        
-//        let repository = EmotionRepository(userId: userId)
-//        let transformer = GptEmotionTransformer()
-//        let homeViewModel = HomeViewModel(repository: repository, transformer: transformer)
-//        let homeViewController = HomeViewController(viewModel: homeViewModel)
-//        let nav = UINavigationController(rootViewController: homeViewController)
-//        
-//        guard let window = self.window else { return }
-//        
-//        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {
-//            window.rootViewController = nav
-//        }, completion: nil)
     }
     
     

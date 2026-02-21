@@ -45,7 +45,12 @@ final class AddEmotionViewController: UIViewController {
     }
     
     private func setupNavigationBar() {
-        title = "Re:Feel - addView"
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.tintColor = .white
         navigationItem.rightBarButtonItem = saveButton
         navigationItem.largeTitleDisplayMode = .never
     }

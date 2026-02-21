@@ -39,7 +39,7 @@ final class HomeViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemGroupedBackground
+        //view.backgroundColor = .systemGroupedBackground
         homeView.tableView.backgroundColor = .clear
         homeView.tableView.separatorStyle = .none
         homeView.tableView.sectionHeaderHeight = 50
@@ -77,16 +77,23 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func addViewBtnTapped() {
-        let addViewModel = AddEmotionViewModel(transformer: viewModel.transformer, repository: viewModel.repository)
+//        if viewModel.hasDiaryForToday() {
+//            let alert = UIAlertController(title: "작성 제한", message: "하루에 하나의 감정만 기록할 수 있어요.", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "확인", style: .default))
+//            present(alert, animated: true)
+//            return
+//        }
         
+        let addViewModel = AddEmotionViewModel(transformer: viewModel.transformer, repository: viewModel.repository)
         addViewModel.didCreateEmotion
             .sink { [weak self] _ in
-                print("새 글 등록, 목록 새로고침")
+                print("일기 작성 완료 -> 목록 갱신")
                 self?.viewModel.fetchEmotions()
             }
             .store(in: &cancellables)
         
         let vc = AddEmotionViewController(viewModel: addViewModel)
+        vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
 }
@@ -107,11 +114,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         let titleLabel = UILabel()
         titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
         titleLabel.textColor = .label
+        titleLabel.textColor = .white
         
         let sectionDate = viewModel.sections[section].date
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy년 M월"
-        titleLabel.text = formatter.string(from: sectionDate)
+        titleLabel.text = DateFormatter.yyyyMM.string(from: sectionDate)
         
         headerView.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false

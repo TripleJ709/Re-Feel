@@ -42,6 +42,20 @@ final class HomeViewModel {
             .store(in: &cancellables)
     }
     
+    func hasDiaryForToday() -> Bool {
+        let todayStr = DateFormatter.yyyyMMdd.string(from: Date())
+        
+        for section in sections {
+            for item in section.items {
+                let itemDateStr = DateFormatter.yyyyMMdd.string(from: item.createdAt)
+                if itemDateStr == todayStr {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     private func organizeByMonth(emotions: [Emotion]) {
         let calendar = Calendar.current
         let grouped = Dictionary(grouping: emotions) { emotion -> Date in

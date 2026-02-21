@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import AuthenticationServices
 
 final class SettingViewController: UIViewController {
     private let viewModel = SettingViewModel()
@@ -26,12 +27,50 @@ final class SettingViewController: UIViewController {
         super.viewDidLoad()
         setupController()
         bindViewModel()
+        setupFooter()
     }
     
     private func setupController() {
         title = "설정"
         settingView.tableView.delegate = self
         settingView.tableView.dataSource = self
+        
+        settingView.tableView.register(SettingLoginCell.self, forCellReuseIdentifier: SettingLoginCell.identifier)
+        settingView.tableView.register(SettingToggleCell.self, forCellReuseIdentifier: SettingToggleCell.identifier)
+        settingView.tableView.register(SettingTimeCell.self, forCellReuseIdentifier: SettingTimeCell.identifier)
+        settingView.tableView.register(SettingSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SettingSectionHeaderView.identifier)
+    }
+    
+    private func setupFooter() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 100))
+        
+        let versionLabel = UILabel()
+        versionLabel.text = "Re:Feel v1.0.0"
+        versionLabel.font = .systemFont(ofSize: 14, weight: .regular)
+        versionLabel.textColor = UIColor.white.withAlphaComponent(0.6)
+        versionLabel.textAlignment = .center
+        
+        let subtitleLabel = UILabel()
+        subtitleLabel.text = "당신의 감정을 기록하는 우주"
+        subtitleLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        subtitleLabel.textColor = UIColor.white.withAlphaComponent(0.6)
+        subtitleLabel.textAlignment = .center
+        
+        footerView.addSubview(versionLabel)
+        footerView.addSubview(subtitleLabel)
+        
+        versionLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            versionLabel.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            versionLabel.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 40),
+            
+            subtitleLabel.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            subtitleLabel.topAnchor.constraint(equalTo: versionLabel.bottomAnchor, constant: 8)
+        ])
+        
+        settingView.tableView.tableFooterView = footerView
     }
     
     private func bindViewModel() {
@@ -65,14 +104,14 @@ final class SettingViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.didLinkGoogleAccount
+        viewModel.didLinkAccount
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self else { return }
                 
                 self.settingView.tableView.reloadData()
                 
-                let alert = UIAlertController(title: "성공", message: "Google 계정과 성공적으로 연동되었습니다!", preferredStyle: .alert)
+                let alert = UIAlertController(title: "성공", message: "계정이 성공적으로 연동되었습니다!", preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: "확인", style: .default))
                 self.present(alert, animated: true)
             }
@@ -82,101 +121,157 @@ final class SettingViewController: UIViewController {
 
 extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
-    }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 { return 1 }
-        if section == 1 {
-            return viewModel.isNotificationOn ? 2 : 1
-        }
         return 2
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "계정 관리" : "앱 정보"
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            let status = viewModel.checkCurrentProvider()
+            if status == "익명 로그인 사용자" || status == "익명 사용자" {
+                return 2
+            } else {
+                return 3
+            }
+        }
+        return viewModel.isNotificationOn ? 2 : 1
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SettingSectionHeaderView.identifier) as? SettingSectionHeaderView else { return nil }
+        
+        if section == 0 {
+            header.configure(iconName: "person", title: "계정 관리")
+        } else {
+            header.configure(iconName: "bell", title: "알림")
+        }
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        cell.accessoryView = nil
-        cell.accessoryType = .none
-        cell.selectionStyle = .none
-        cell.textLabel?.textColor = .label
-        
         if indexPath.section == 0 {
             let status = viewModel.checkCurrentProvider()
-            
-            if status == "익명 사용자" {
-                cell.textLabel?.text = "Google 계정 연동하기"
-                cell.textLabel?.textColor = .systemBlue
-                cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .default
+            if status == "익명 로그인 사용자" || status == "익명 사용자" {
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingLoginCell.identifier, for: indexPath) as? SettingLoginCell else { return UITableViewCell() }
+                if indexPath.row == 0 {
+                    cell.configure(type: "Google")
+                } else {
+                    cell.configure(type: "Apple")
+                }
+                return cell
             } else {
-                cell.textLabel?.text = "현재 계정: \(status)"
-                cell.textLabel?.textColor = .label
-                cell.accessoryType = .checkmark
-                cell.selectionStyle = .none
+                if indexPath.row == 0 {
+                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
+                    let label = UILabel()
+                    label.text = "연동된 계정: \(status)"
+                    label.textColor = .white
+                    label.font = .systemFont(ofSize: 16, weight: .bold)
+                    
+                    let checkIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+                    checkIcon.tintColor = .systemGreen
+                    
+                    cell.containerView.addSubview(checkIcon)
+                    cell.containerView.addSubview(label)
+                    
+                    checkIcon.translatesAutoresizingMaskIntoConstraints = false
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    NSLayoutConstraint.activate([
+                        checkIcon.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 20),
+                        checkIcon.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                        checkIcon.widthAnchor.constraint(equalToConstant: 24),
+                        checkIcon.heightAnchor.constraint(equalToConstant: 24),
+                        
+                        label.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 12),
+                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                        
+                        cell.containerView.heightAnchor.constraint(equalToConstant: 64)
+                    ])
+                    return cell
+                } else if indexPath.row == 1 {
+                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
+                    let label = UILabel()
+                    label.text = "로그아웃"
+                    label.textColor = UIColor(red: 1.0, green: 0.3, blue: 0.3, alpha: 1.0)
+                    label.font = .systemFont(ofSize: 16, weight: .medium)
+                    
+                    cell.containerView.addSubview(label)
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    NSLayoutConstraint.activate([
+                        label.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor),
+                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                        cell.containerView.heightAnchor.constraint(equalToConstant: 50)
+                    ])
+                    return cell
+                } else {
+                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
+                    let label = UILabel()
+                    label.text = "회원 탈퇴"
+                    label.textColor = .systemGray
+                    label.font = .systemFont(ofSize: 14, weight: .medium)
+                    
+                    cell.containerView.addSubview(label)
+                    label.translatesAutoresizingMaskIntoConstraints = false
+                    
+                    NSLayoutConstraint.activate([
+                        label.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor),
+                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                        cell.containerView.heightAnchor.constraint(equalToConstant: 50)
+                    ])
+                    return cell
+                }
             }
-            return cell
         }
         
         if indexPath.section == 1 {
             if indexPath.row == 0 {
-                cell.textLabel?.text = "일기 작성 알림"
-                
-                let switchControl = UISwitch()
-                switchControl.isOn = viewModel.isNotificationOn
-                switchControl.addTarget(self, action: #selector(didToggleSwitch(_:)), for: .valueChanged)
-                cell.accessoryView = switchControl
-                
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingToggleCell.identifier, for: indexPath) as? SettingToggleCell else { return UITableViewCell() }
+                cell.configure(title: "일기 알림", subtitle: "매일 정해진 시간에 알림을 받아보세요", isOn: viewModel.isNotificationOn)
+                cell.toggleSwitch.addTarget(self, action: #selector(didToggleSwitch(_:)), for: .valueChanged)
+                return cell
             } else {
-                cell.textLabel?.text = "알림 시간"
-                
-                let datePicker = UIDatePicker()
-                datePicker.datePickerMode = .time
-                datePicker.preferredDatePickerStyle = .compact
-                datePicker.date = viewModel.notificationTime
-                datePicker.addTarget(self, action: #selector(didChangeTime(_:)), for: .valueChanged)
-                cell.accessoryView = datePicker
+                guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingTimeCell.identifier, for: indexPath) as? SettingTimeCell else { return UITableViewCell() }
+                cell.configure(title: "알림 시간", time: viewModel.notificationTime)
+                cell.datePicker.addTarget(self, action: #selector(didChangeTime(_:)), for: .valueChanged)
+                return cell
             }
-            return cell
         }
         
-        if indexPath.section == 2 {
-            cell.textLabel?.text = indexPath.row == 0 ? "버전 정보" : "문의하기"
-            
-            if indexPath.row == 0 {
-                let versionLabel = UILabel()
-                versionLabel.text = "1.0.0"
-                versionLabel.textColor = .secondaryLabel
-                versionLabel.font = .systemFont(ofSize: 16)
-                versionLabel.sizeToFit()
-                cell.accessoryView = versionLabel
-            } else {
-                cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .default
-            }
-            return cell
-        }
-        
-        return cell
+        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
         if indexPath.section == 0 {
             let status = viewModel.checkCurrentProvider()
-            if status == "익명 로그인 사용자" {
-                viewModel.linkGoogleAccount(presenting: self)
+            if status == "익명 로그인 사용자" || status == "익명 사용자" {
+                if indexPath.row == 0 {
+                    viewModel.linkGoogle(presenting: self)
+                } else {
+                    if let window = self.view.window {
+                        viewModel.linkApple(window: window)
+                    }
+                }
+            } else {
+                if indexPath.row == 1 {
+                    let alert = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
+                        self?.viewModel.signOut()
+                    }))
+                    self.present(alert, animated: true)
+                } else if indexPath.row == 2 {
+                    let alert = UIAlertController(title: "회원 탈퇴", message: "정말 탈퇴하시겠습니까?\n모든 기록과 데이터가 삭제되며 복구할 수 없습니다.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                    alert.addAction(UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { [weak self] _ in
+                        self?.viewModel.deleteAccount()
+                    }))
+                    self.present(alert, animated: true)
+                }
             }
-        }
-        
-        if indexPath.section == 2 && indexPath.row == 1 {
-            // 문의하기 클릭 시 동작 (이메일 보내기 등 추후 구현)
-            print("문의하기 클릭됨")
         }
     }
     
@@ -186,5 +281,275 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     
     @objc private func didChangeTime(_ sender: UIDatePicker) {
         viewModel.updateNotificationTime(date: sender.date)
+    }
+}
+
+// MARK: - Custom Views
+final class SettingSectionHeaderView: UITableViewHeaderFooterView {
+    static let identifier = "SettingSectionHeaderView"
+    
+    private let iconImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.tintColor = UIColor(red: 0.48, green: 0.38, blue: 0.93, alpha: 1) // #7C61ED
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 18, weight: .bold)
+        return label
+    }()
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        contentView.addSubview(iconImageView)
+        contentView.addSubview(titleLabel)
+        
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            iconImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
+            iconImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
+            iconImageView.widthAnchor.constraint(equalToConstant: 20),
+            iconImageView.heightAnchor.constraint(equalToConstant: 20),
+            
+            titleLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
+            titleLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor)
+        ])
+    }
+    
+    required init?(coder: NSCoder) { fatalError() }
+    
+    func configure(iconName: String, title: String) {
+        iconImageView.image = UIImage(systemName: iconName)
+        titleLabel.text = title
+    }
+}
+
+class SettingBaseCell: UITableViewCell {
+    let containerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.08)
+        view.layer.cornerRadius = 16
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.white.withAlphaComponent(0.15).cgColor
+        return view
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        backgroundColor = .clear
+        selectionStyle = .none
+        
+        contentView.addSubview(containerView)
+        containerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            containerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 6),
+            containerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -6),
+            containerView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20),
+            containerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20)
+        ])
+    }
+    
+    required init?(coder: NSCoder) { fatalError() }
+}
+
+final class SettingLoginCell: SettingBaseCell {
+    static let identifier = "SettingLoginCell"
+    
+    private let appleButton: ASAuthorizationAppleIDButton = {
+        let button = ASAuthorizationAppleIDButton(authorizationButtonType: .signIn, authorizationButtonStyle: .white)
+        button.cornerRadius = 8
+        button.isUserInteractionEnabled = false
+        return button
+    }()
+    
+    private let googleButtonView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 8
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+    
+    private let googleIconImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.image = UIImage(named: "GoogleLogo")
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
+    
+    private let googleTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Sign in with Google"
+        label.textColor = .black
+        label.font = .systemFont(ofSize: 19, weight: .medium)
+        return label
+    }()
+    
+    private lazy var googleStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [googleIconImageView, googleTitleLabel])
+        stack.axis = .horizontal
+        stack.spacing = 6
+        stack.alignment = .center
+        stack.isUserInteractionEnabled = false
+        return stack
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        containerView.backgroundColor = .clear
+        containerView.layer.borderWidth = 0
+        
+        containerView.addSubview(appleButton)
+        containerView.addSubview(googleButtonView)
+        googleButtonView.addSubview(googleStackView)
+        
+        appleButton.translatesAutoresizingMaskIntoConstraints = false
+        googleButtonView.translatesAutoresizingMaskIntoConstraints = false
+        googleIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        googleStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            // Apple Button
+            appleButton.topAnchor.constraint(equalTo: containerView.topAnchor),
+            appleButton.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            appleButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            appleButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            appleButton.heightAnchor.constraint(equalToConstant: 50),
+            
+            googleButtonView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            googleButtonView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            googleButtonView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            googleButtonView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            googleButtonView.heightAnchor.constraint(equalToConstant: 50),
+            
+            googleIconImageView.widthAnchor.constraint(equalToConstant: 18),
+            googleIconImageView.heightAnchor.constraint(equalToConstant: 18),
+            
+            googleStackView.centerXAnchor.constraint(equalTo: googleButtonView.centerXAnchor),
+            googleStackView.centerYAnchor.constraint(equalTo: googleButtonView.centerYAnchor)
+        ])
+    }
+    
+    required init?(coder: NSCoder) { fatalError() }
+    
+    func configure(type: String) {
+        if type == "Google" {
+            appleButton.isHidden = true
+            googleButtonView.isHidden = false
+        } else {
+            appleButton.isHidden = false
+            googleButtonView.isHidden = true
+        }
+    }
+}
+
+final class SettingToggleCell: SettingBaseCell {
+    static let identifier = "SettingToggleCell"
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        return label
+    }()
+    
+    private let subtitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.white.withAlphaComponent(0.6)
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        return label
+    }()
+    
+    let toggleSwitch: UISwitch = {
+        let sw = UISwitch()
+        sw.onTintColor = UIColor(red: 0.48, green: 0.38, blue: 0.93, alpha: 1) // #7C61ED
+        return sw
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        let stackView = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
+        stackView.axis = .vertical
+        stackView.spacing = 4
+        stackView.alignment = .leading
+        
+        containerView.addSubview(stackView)
+        containerView.addSubview(toggleSwitch)
+        
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        toggleSwitch.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            toggleSwitch.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            toggleSwitch.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            containerView.heightAnchor.constraint(equalToConstant: 72)
+        ])
+    }
+    
+    required init?(coder: NSCoder) { fatalError() }
+    
+    func configure(title: String, subtitle: String, isOn: Bool) {
+        titleLabel.text = title
+        subtitleLabel.text = subtitle
+        toggleSwitch.isOn = isOn
+    }
+}
+
+final class SettingTimeCell: SettingBaseCell {
+    static let identifier = "SettingTimeCell"
+    
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        return label
+    }()
+    
+    let datePicker: UIDatePicker = {
+        let dp = UIDatePicker()
+        dp.datePickerMode = .time
+        dp.preferredDatePickerStyle = .compact
+        dp.overrideUserInterfaceStyle = .dark
+        dp.tintColor = UIColor(red: 0.48, green: 0.38, blue: 0.93, alpha: 1) // #7C61ED
+        return dp
+    }()
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        containerView.addSubview(titleLabel)
+        containerView.addSubview(datePicker)
+        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
+            titleLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            datePicker.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
+            datePicker.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+            
+            containerView.heightAnchor.constraint(equalToConstant: 64)
+        ])
+    }
+    
+    required init?(coder: NSCoder) { fatalError() }
+    
+    func configure(title: String, time: Date) {
+        titleLabel.text = title
+        datePicker.date = time
     }
 }
