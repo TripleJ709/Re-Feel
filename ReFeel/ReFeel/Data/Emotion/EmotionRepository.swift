@@ -50,6 +50,9 @@ final class EmotionRepository: EmotionRepositoryProtocol {
                         if let error {
                             promise(.failure(error))
                         } else {
+                            UserDefaults.standard.set(Date(), forKey: "lastDiaryDate")
+                            NotificationManager.shared.reschedule()
+                            
                             promise(.success(()))
                         }
                     }

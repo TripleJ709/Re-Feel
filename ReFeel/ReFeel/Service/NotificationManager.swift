@@ -13,7 +13,6 @@ final class NotificationManager {
     
     private init() {}
     
-    // 권한 요청하기
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
         let option: UNAuthorizationOptions = [.alert, .sound, .badge]
         UNUserNotificationCenter.current().requestAuthorization(options: option) { granted, error in
@@ -34,23 +33,45 @@ final class NotificationManager {
         content.body = "오늘 하루는 어떠셨나요? 감정을 기록해보세요. 😄"
         content.sound = .default
         
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.hour, .minute], from: date)
-        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
-        // let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false) // 알림 테스트용(5초후 실행 코드)
-        let request = UNNotificationRequest(identifier: "DailyReminder", content: content, trigger: trigger)
+        var skipToday = false
+        if let lastDiaryDate = UserDefaults.standard.object(forKey: "lastDiaryDate") as? Date {
+            skipToday = Calendar.current.isDateInToday(lastDiaryDate)
+        }
         
-        guard let componentsHour = components.hour,
-              let componentsMinute = components.minute else {
+        let calendar = Calendar.current
+        let timeComponents = calendar.dateComponents([.hour, .minute], from: date)
+        
+        guard let hour = timeComponents.hour, let minute = timeComponents.minute else {
             print("시간 설정 실패")
             return
         }
         
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error {
-                print("알람 스케쥴링 실패: \(error.localizedDescription)")
-            } else {
-                print("알람 설정 완료: \(componentsHour)시 \(componentsMinute)분")
+        let startIndex = skipToday ? 1 : 0
+        
+        for i in startIndex..<60 {
+            guard let triggerDate = calendar.date(byAdding: .day, value: i, to: Date()),
+                  var triggerComponents = calendar.dateComponents([.year, .month, .day], from: triggerDate) as DateComponents? else { continue }
+            
+            triggerComponents.hour = hour
+            triggerComponents.minute = minute
+            
+            let trigger = UNCalendarNotificationTrigger(dateMatching: triggerComponents, repeats: false)
+            let request = UNNotificationRequest(identifier: "DailyReminder_\(i)", content: content, trigger: trigger)
+            
+            UNUserNotificationCenter.current().add(request) { error in
+                if let error {
+                    print("\(i)일 뒤 알림 예약 실패: \(error.localizedDescription)")
+                }
+            }
+        }
+        
+        print("알림 60일치 예약 완료 (오늘 알림 스킵 여부: \(skipToday))")
+    }
+    
+    func reschedule() {
+        if UserDefaults.standard.bool(forKey: "isNotificationOn") {
+            if let savedTime = UserDefaults.standard.object(forKey: "notificationTime") as? Date {
+                scheduleNotification(at: savedTime)
             }
         }
     }
