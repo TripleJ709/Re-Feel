@@ -61,15 +61,25 @@ extension UIView {
         let duration = Double.random(in: 1.5...3.0)
         let delay = Double.random(in: 0.0...1.5)
         
-        UIView.animate(
-            withDuration: duration,
-            delay: delay,
-            options: [.repeat, .autoreverse, .curveEaseInOut, .allowUserInteraction],
-            animations: {
-                star.alpha = 1.0
-                star.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
-            },
-            completion: nil
-        )
+        let animationGroup = CAAnimationGroup()
+        animationGroup.duration = duration
+        animationGroup.beginTime = CACurrentMediaTime() + delay
+        animationGroup.autoreverses = true
+        animationGroup.repeatCount = .infinity
+        animationGroup.isRemovedOnCompletion = false // 화면 전환 시 애니메이션이 삭제되는 현상 방지
+        animationGroup.fillMode = .forwards
+        animationGroup.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        let opacityAnim = CABasicAnimation(keyPath: "opacity")
+        opacityAnim.fromValue = 0.3
+        opacityAnim.toValue = 1.0
+        
+        let scaleAnim = CABasicAnimation(keyPath: "transform.scale")
+        scaleAnim.fromValue = 1.0
+        scaleAnim.toValue = 1.2
+        
+        animationGroup.animations = [opacityAnim, scaleAnim]
+        
+        star.layer.add(animationGroup, forKey: "twinkleAnimation")
     }
 }
