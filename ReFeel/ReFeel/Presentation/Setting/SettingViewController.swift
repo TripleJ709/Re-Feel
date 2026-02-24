@@ -157,9 +157,9 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             if status == "익명 로그인 사용자" || status == "익명 사용자" {
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: SettingLoginCell.identifier, for: indexPath) as? SettingLoginCell else { return UITableViewCell() }
                 if indexPath.row == 0 {
-                    cell.configure(type: "Google")
-                } else {
                     cell.configure(type: "Apple")
+                } else {
+                    cell.configure(type: "Google")
                 }
                 return cell
             } else {
@@ -249,11 +249,11 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             let status = viewModel.checkCurrentProvider()
             if status == "익명 로그인 사용자" || status == "익명 사용자" {
                 if indexPath.row == 0 {
-                    viewModel.linkGoogle(presenting: self)
-                } else {
                     if let window = self.view.window {
                         viewModel.linkApple(window: window)
                     }
+                } else {
+                    viewModel.linkGoogle(presenting: self)
                 }
             } else {
                 if indexPath.row == 1 {

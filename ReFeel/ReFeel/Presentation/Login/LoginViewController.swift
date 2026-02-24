@@ -30,12 +30,14 @@ final class LoginViewController: UIViewController {
         return label
     }()
     
+    // Apple Button
     private let appleButton: ASAuthorizationAppleIDButton = {
         let button = ASAuthorizationAppleIDButton(authorizationButtonType: .signIn, authorizationButtonStyle: .white)
         button.cornerRadius = 8
         return button
     }()
     
+    // Google Button
     private let googleButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -88,7 +90,7 @@ final class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.15, alpha: 1)
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.15, alpha: 1) // 홈 화면과 비슷한 어두운 배경
         
         setupLayout()
         setupActions()
@@ -121,9 +123,14 @@ final class LoginViewController: UIViewController {
             subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             
+            appleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            appleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            appleButton.bottomAnchor.constraint(equalTo: googleButtonView.topAnchor, constant: -16),
+            appleButton.heightAnchor.constraint(equalToConstant: 50),
+            
             googleButtonView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             googleButtonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            googleButtonView.bottomAnchor.constraint(equalTo: appleButton.topAnchor, constant: -16),
+            googleButtonView.bottomAnchor.constraint(equalTo: anonymousButton.topAnchor, constant: -30),
             googleButtonView.heightAnchor.constraint(equalToConstant: 50),
             
             googleIconImageView.widthAnchor.constraint(equalToConstant: 18),
@@ -131,11 +138,6 @@ final class LoginViewController: UIViewController {
             
             googleStackView.centerXAnchor.constraint(equalTo: googleButtonView.centerXAnchor),
             googleStackView.centerYAnchor.constraint(equalTo: googleButtonView.centerYAnchor),
-            
-            appleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            appleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            appleButton.bottomAnchor.constraint(equalTo: anonymousButton.topAnchor, constant: -30),
-            appleButton.heightAnchor.constraint(equalToConstant: 50),
             
             anonymousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             anonymousButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
@@ -198,7 +200,7 @@ final class LoginViewController: UIViewController {
         showLoading(true)
         Auth.auth().signInAnonymously { [weak self] result, error in
             self?.showLoading(false)
-            if let error {
+            if let error = error {
                 self?.showError(error)
                 return
             }
