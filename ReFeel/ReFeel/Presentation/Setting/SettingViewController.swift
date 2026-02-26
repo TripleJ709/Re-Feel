@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import AuthenticationServices
+import MessageUI
 
 final class SettingViewController: UIViewController {
     private let viewModel = SettingViewModel()
@@ -121,7 +122,7 @@ final class SettingViewController: UIViewController {
 
 extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 3
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -133,7 +134,10 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 return 3
             }
         }
-        return viewModel.isNotificationOn ? 2 : 1
+        if section == 1 {
+            return viewModel.isNotificationOn ? 2 : 1
+        }
+        return 2
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -141,8 +145,10 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
         
         if section == 0 {
             header.configure(iconName: "person", title: "계정 관리")
-        } else {
+        } else if section == 1 {
             header.configure(iconName: "bell", title: "알림")
+        } else {
+            header.configure(iconName: "info.circle", title: "정보 및 문의")
         }
         return header
     }
@@ -241,6 +247,43 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
         
+        if indexPath.section == 2 {
+            let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
+            
+            let label = UILabel()
+            label.textColor = .white
+            label.font = .systemFont(ofSize: 16, weight: .medium)
+            
+            let chevronIcon = UIImageView(image: UIImage(systemName: "chevron.right"))
+            chevronIcon.tintColor = .systemGray
+            
+            cell.containerView.addSubview(label)
+            cell.containerView.addSubview(chevronIcon)
+            
+            label.translatesAutoresizingMaskIntoConstraints = false
+            chevronIcon.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                label.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 20),
+                label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                
+                chevronIcon.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -20),
+                chevronIcon.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                chevronIcon.widthAnchor.constraint(equalToConstant: 12),
+                chevronIcon.heightAnchor.constraint(equalToConstant: 16),
+                
+                cell.containerView.heightAnchor.constraint(equalToConstant: 56)
+            ])
+            
+            if indexPath.row == 0 {
+                label.text = "앱 문의하기"
+            } else {
+                label.text = "개인정보처리방침"
+            }
+            
+            return cell
+        }
+        
         return UITableViewCell()
     }
     
@@ -273,6 +316,65 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         }
+        
+        if indexPath.section == 2 {
+            if indexPath.row == 0 {
+                sendEmail()
+            } else if indexPath.row == 1 {
+                if let url = URL(string: "https://vaulted-danthus-a6c.notion.site/Re-Feel-231269ec6fca80df9d6de8bc3642fbad") {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+    }
+    
+    private func sendEmail() {
+        let email = "ijn9907@gmail.com"
+        let alert = UIAlertController(title: "문의하기", message: "원하시는 문의 방식을 선택해주세요.", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "웹 폼으로 문의하기", style: .default, handler: { _ in
+            if let url = URL(string: "https://forms.gle/MsVn67tpMbdjYG5g8") {
+                UIApplication.shared.open(url)
+            }
+        }))
+    
+        alert.addAction(UIAlertAction(title: "이메일 앱 열기", style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            if MFMailComposeViewController.canSendMail() {
+                let composeVC = MFMailComposeViewController()
+                composeVC.mailComposeDelegate = self
+                composeVC.setToRecipients([email])
+                composeVC.setSubject("[Re:Feel] 앱 관련 문의")
+                
+                let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "알 수 없음"
+                let osVersion = UIDevice.current.systemVersion
+                let deviceModel = UIDevice.current.model
+                
+                let messageBody = """
+                
+                -------------------
+                아래에 문의 내용을 작성해 주세요.
+                
+                
+                
+                -------------------
+                App Version: \(appVersion)
+                OS Version: \(osVersion)
+                Device: \(deviceModel)
+                """
+                composeVC.setMessageBody(messageBody, isHTML: false)
+                self.present(composeVC, animated: true, completion: nil)
+            } else {
+                UIPasteboard.general.string = email
+                let copyAlert = UIAlertController(title: "메일 복사 완료", message: "메일 앱이 연동되어 있지 않습니다. 개발자 이메일 주소(\(email))가 복사되었습니다. 사용하시는 메일 앱에서 문의를 보내주세요.", preferredStyle: .alert)
+                copyAlert.addAction(UIAlertAction(title: "확인", style: .default))
+                self.present(copyAlert, animated: true)
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+        present(alert, animated: true)
     }
     
     @objc private func didToggleSwitch(_ sender: UISwitch) {
@@ -281,6 +383,12 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
     
     @objc private func didChangeTime(_ sender: UIDatePicker) {
         viewModel.updateNotificationTime(date: sender.date)
+    }
+}
+
+extension SettingViewController: MFMailComposeViewControllerDelegate {
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
     }
 }
 

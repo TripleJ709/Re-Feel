@@ -17,7 +17,6 @@ final class MainTabBarController: UITabBarController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        // 탭바 선과 그림자를 제거하여 투명하게 유지
         tabBar.layer.shadowOpacity = 0
         tabBar.layer.borderWidth = 0
     }
