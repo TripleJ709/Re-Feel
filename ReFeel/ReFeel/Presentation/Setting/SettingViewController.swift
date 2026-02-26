@@ -131,7 +131,7 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
             if status == "익명 로그인 사용자" || status == "익명 사용자" {
                 return 2
             } else {
-                return 3
+                return 1 // 연동된 계정 셀 1개만 표시 (터치 시 액션 시트 나옴)
             }
         }
         if section == 1 {
@@ -169,67 +169,43 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                 }
                 return cell
             } else {
-                if indexPath.row == 0 {
-                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
-                    let label = UILabel()
-                    label.text = "연동된 계정: \(status)"
-                    label.textColor = .white
-                    label.font = .systemFont(ofSize: 16, weight: .bold)
+                let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
+                let label = UILabel()
+                label.text = "연동된 계정: \(status)"
+                label.textColor = .white
+                label.font = .systemFont(ofSize: 16, weight: .bold)
+                
+                let checkIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
+                checkIcon.tintColor = .systemGreen
+                
+                let chevronIcon = UIImageView(image: UIImage(systemName: "chevron.right"))
+                chevronIcon.tintColor = .systemGray
+                
+                cell.containerView.addSubview(checkIcon)
+                cell.containerView.addSubview(label)
+                cell.containerView.addSubview(chevronIcon)
+                
+                checkIcon.translatesAutoresizingMaskIntoConstraints = false
+                label.translatesAutoresizingMaskIntoConstraints = false
+                chevronIcon.translatesAutoresizingMaskIntoConstraints = false
+                
+                NSLayoutConstraint.activate([
+                    checkIcon.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 20),
+                    checkIcon.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                    checkIcon.widthAnchor.constraint(equalToConstant: 24),
+                    checkIcon.heightAnchor.constraint(equalToConstant: 24),
                     
-                    let checkIcon = UIImageView(image: UIImage(systemName: "checkmark.circle.fill"))
-                    checkIcon.tintColor = .systemGreen
+                    label.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 12),
+                    label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
                     
-                    cell.containerView.addSubview(checkIcon)
-                    cell.containerView.addSubview(label)
+                    chevronIcon.trailingAnchor.constraint(equalTo: cell.containerView.trailingAnchor, constant: -20),
+                    chevronIcon.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
+                    chevronIcon.widthAnchor.constraint(equalToConstant: 12),
+                    chevronIcon.heightAnchor.constraint(equalToConstant: 16),
                     
-                    checkIcon.translatesAutoresizingMaskIntoConstraints = false
-                    label.translatesAutoresizingMaskIntoConstraints = false
-                    
-                    NSLayoutConstraint.activate([
-                        checkIcon.leadingAnchor.constraint(equalTo: cell.containerView.leadingAnchor, constant: 20),
-                        checkIcon.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
-                        checkIcon.widthAnchor.constraint(equalToConstant: 24),
-                        checkIcon.heightAnchor.constraint(equalToConstant: 24),
-                        
-                        label.leadingAnchor.constraint(equalTo: checkIcon.trailingAnchor, constant: 12),
-                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
-                        
-                        cell.containerView.heightAnchor.constraint(equalToConstant: 64)
-                    ])
-                    return cell
-                } else if indexPath.row == 1 {
-                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
-                    let label = UILabel()
-                    label.text = "로그아웃"
-                    label.textColor = UIColor(red: 1.0, green: 0.3, blue: 0.3, alpha: 1.0)
-                    label.font = .systemFont(ofSize: 16, weight: .medium)
-                    
-                    cell.containerView.addSubview(label)
-                    label.translatesAutoresizingMaskIntoConstraints = false
-                    
-                    NSLayoutConstraint.activate([
-                        label.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor),
-                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
-                        cell.containerView.heightAnchor.constraint(equalToConstant: 50)
-                    ])
-                    return cell
-                } else {
-                    let cell = SettingBaseCell(style: .default, reuseIdentifier: nil)
-                    let label = UILabel()
-                    label.text = "회원 탈퇴"
-                    label.textColor = .systemGray
-                    label.font = .systemFont(ofSize: 14, weight: .medium)
-                    
-                    cell.containerView.addSubview(label)
-                    label.translatesAutoresizingMaskIntoConstraints = false
-                    
-                    NSLayoutConstraint.activate([
-                        label.centerXAnchor.constraint(equalTo: cell.containerView.centerXAnchor),
-                        label.centerYAnchor.constraint(equalTo: cell.containerView.centerYAnchor),
-                        cell.containerView.heightAnchor.constraint(equalToConstant: 50)
-                    ])
-                    return cell
-                }
+                    cell.containerView.heightAnchor.constraint(equalToConstant: 64)
+                ])
+                return cell
             }
         }
         
@@ -299,20 +275,30 @@ extension SettingViewController: UITableViewDataSource, UITableViewDelegate {
                     viewModel.linkGoogle(presenting: self)
                 }
             } else {
-                if indexPath.row == 1 {
-                    let alert = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-                    alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
-                        self?.viewModel.signOut()
+                if indexPath.row == 0 {
+                    let actionSheet = UIAlertController(title: "계정 관리", message: "원하시는 작업을 선택해주세요.", preferredStyle: .actionSheet)
+                    
+                    actionSheet.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { [weak self] _ in
+                        let alert = UIAlertController(title: "로그아웃", message: "정말 로그아웃 하시겠습니까?", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                        alert.addAction(UIAlertAction(title: "로그아웃", style: .destructive, handler: { _ in
+                            self?.viewModel.signOut()
+                        }))
+                        self?.present(alert, animated: true)
                     }))
-                    self.present(alert, animated: true)
-                } else if indexPath.row == 2 {
-                    let alert = UIAlertController(title: "회원 탈퇴", message: "정말 탈퇴하시겠습니까?\n모든 기록과 데이터가 삭제되며 복구할 수 없습니다.", preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "취소", style: .cancel))
-                    alert.addAction(UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { [weak self] _ in
-                        self?.viewModel.deleteAccount()
+                    
+                    actionSheet.addAction(UIAlertAction(title: "회원 탈퇴", style: .destructive, handler: { [weak self] _ in
+                        let alert = UIAlertController(title: "회원 탈퇴", message: "정말 탈퇴하시겠습니까?\n모든 기록과 데이터가 삭제되며 복구할 수 없습니다.", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "취소", style: .cancel))
+                        alert.addAction(UIAlertAction(title: "탈퇴하기", style: .destructive, handler: { _ in
+                            self?.viewModel.deleteAccount()
+                        }))
+                        self?.present(alert, animated: true)
                     }))
-                    self.present(alert, animated: true)
+                    
+                    actionSheet.addAction(UIAlertAction(title: "취소", style: .cancel))
+                    
+                    self.present(actionSheet, animated: true)
                 }
             }
         }
