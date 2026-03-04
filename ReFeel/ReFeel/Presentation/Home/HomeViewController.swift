@@ -77,12 +77,12 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func addViewBtnTapped() {
-//        if viewModel.hasDiaryForToday() {
-//            let alert = UIAlertController(title: "작성 제한", message: "하루에 하나의 감정만 기록할 수 있어요.", preferredStyle: .alert)
-//            alert.addAction(UIAlertAction(title: "확인", style: .default))
-//            present(alert, animated: true)
-//            return
-//        }
+        if viewModel.hasDiaryForToday() {
+            let alert = UIAlertController(title: "작성 제한", message: "하루에 하나의 감정만 기록할 수 있어요.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "확인", style: .default))
+            present(alert, animated: true)
+            return
+        }
         
         let addViewModel = AddEmotionViewModel(transformer: viewModel.transformer, repository: viewModel.repository)
         addViewModel.didCreateEmotion
