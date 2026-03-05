@@ -10,6 +10,7 @@ import Combine
 import FirebaseAuth
 import UIKit
 import FirebaseFirestore
+import AuthenticationServices
 
 final class SettingViewModel {
     @Published var isLoading: Bool = false
@@ -38,7 +39,12 @@ final class SettingViewModel {
                     self?.alertMessage = "구글 연동 실패: \(error.localizedDescription)"
                 }
             } receiveValue: { [weak self] user in
+                self?.isLoading = false
                 self?.didLinkAccount.send(())
+                
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                    sceneDelegate.changeRootToHome(userId: user.uid)
+                }
             }
             .store(in: &cancellables)
     }
@@ -51,10 +57,18 @@ final class SettingViewModel {
             .sink { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
+                    if let asError = error as? ASAuthorizationError, asError.code == .canceled {
+                        return
+                    }
                     self?.alertMessage = "애플 연동 실패: \(error.localizedDescription)"
                 }
             } receiveValue: { [weak self] user in
+                self?.isLoading = false
                 self?.didLinkAccount.send(())
+                
+                if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+                    sceneDelegate.changeRootToHome(userId: user.uid)
+                }
             }
             .store(in: &cancellables)
     }
@@ -68,7 +82,7 @@ final class SettingViewModel {
                 if provider == "google.com" { return "Google 계정" }
                 if provider == "apple.com" { return "Apple 계정" }
             }
-            return "이메일 계정(없음)"
+            return "소셜 로그인 회원"
         }
     }
     

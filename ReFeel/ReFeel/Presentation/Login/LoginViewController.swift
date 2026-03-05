@@ -30,12 +30,14 @@ final class LoginViewController: UIViewController {
         return label
     }()
     
+    // Apple Button
     private let appleButton: ASAuthorizationAppleIDButton = {
         let button = ASAuthorizationAppleIDButton(authorizationButtonType: .signIn, authorizationButtonStyle: .white)
         button.cornerRadius = 8
         return button
     }()
     
+    // Google Button
     private let googleButtonView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -74,6 +76,7 @@ final class LoginViewController: UIViewController {
         btn.setTitleColor(UIColor.white.withAlphaComponent(0.6), for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 14)
         btn.addTarget(self, action: #selector(anonymousTapped), for: .touchUpInside)
+        btn.isHidden = true
         return btn
     }()
     
@@ -88,7 +91,7 @@ final class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.15, alpha: 1)
+        view.backgroundColor = UIColor(red: 0.1, green: 0.1, blue: 0.15, alpha: 1) // 홈 화면과 비슷한 어두운 배경
         
         setupLayout()
         setupActions()
@@ -121,9 +124,14 @@ final class LoginViewController: UIViewController {
             subtitleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
             
+            appleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
+            appleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            appleButton.bottomAnchor.constraint(equalTo: googleButtonView.topAnchor, constant: -16),
+            appleButton.heightAnchor.constraint(equalToConstant: 50),
+            
             googleButtonView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
             googleButtonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            googleButtonView.bottomAnchor.constraint(equalTo: appleButton.topAnchor, constant: -16),
+            googleButtonView.bottomAnchor.constraint(equalTo: anonymousButton.topAnchor, constant: -30),
             googleButtonView.heightAnchor.constraint(equalToConstant: 50),
             
             googleIconImageView.widthAnchor.constraint(equalToConstant: 18),
@@ -131,11 +139,6 @@ final class LoginViewController: UIViewController {
             
             googleStackView.centerXAnchor.constraint(equalTo: googleButtonView.centerXAnchor),
             googleStackView.centerYAnchor.constraint(equalTo: googleButtonView.centerYAnchor),
-            
-            appleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            appleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            appleButton.bottomAnchor.constraint(equalTo: anonymousButton.topAnchor, constant: -30),
-            appleButton.heightAnchor.constraint(equalToConstant: 50),
             
             anonymousButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             anonymousButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -60),
@@ -173,6 +176,7 @@ final class LoginViewController: UIViewController {
                     self?.showError(error)
                 }
             } receiveValue: { [weak self] user in
+                print("구글 로그인 성공, UID: \(user.uid)")
                 self?.navigateToHome(userId: user.uid)
             }
             .store(in: &cancellables)
@@ -186,9 +190,13 @@ final class LoginViewController: UIViewController {
             .sink { [weak self] completion in
                 self?.showLoading(false)
                 if case .failure(let error) = completion {
+                    if let asError = error as? ASAuthorizationError, asError.code == .canceled {
+                        return 
+                    }
                     self?.showError(error)
                 }
             } receiveValue: { [weak self] user in
+                print("애플 로그인 성공, UID: \(user.uid)")
                 self?.navigateToHome(userId: user.uid)
             }
             .store(in: &cancellables)
@@ -198,7 +206,7 @@ final class LoginViewController: UIViewController {
         showLoading(true)
         Auth.auth().signInAnonymously { [weak self] result, error in
             self?.showLoading(false)
-            if let error {
+            if let error = error {
                 self?.showError(error)
                 return
             }
