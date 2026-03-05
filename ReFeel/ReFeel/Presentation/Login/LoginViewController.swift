@@ -76,6 +76,7 @@ final class LoginViewController: UIViewController {
         btn.setTitleColor(UIColor.white.withAlphaComponent(0.6), for: .normal)
         btn.titleLabel?.font = .systemFont(ofSize: 14)
         btn.addTarget(self, action: #selector(anonymousTapped), for: .touchUpInside)
+        btn.isHidden = true
         return btn
     }()
     
@@ -175,6 +176,7 @@ final class LoginViewController: UIViewController {
                     self?.showError(error)
                 }
             } receiveValue: { [weak self] user in
+                print("구글 로그인 성공, UID: \(user.uid)")
                 self?.navigateToHome(userId: user.uid)
             }
             .store(in: &cancellables)
@@ -188,9 +190,13 @@ final class LoginViewController: UIViewController {
             .sink { [weak self] completion in
                 self?.showLoading(false)
                 if case .failure(let error) = completion {
+                    if let asError = error as? ASAuthorizationError, asError.code == .canceled {
+                        return 
+                    }
                     self?.showError(error)
                 }
             } receiveValue: { [weak self] user in
+                print("애플 로그인 성공, UID: \(user.uid)")
                 self?.navigateToHome(userId: user.uid)
             }
             .store(in: &cancellables)

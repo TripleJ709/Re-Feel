@@ -25,6 +25,9 @@ final class AuthService: NSObject {
     
     fileprivate var currentNonce: String?
     private var linkCompletion: ((Result<User, Error>) -> Void)?
+    private var signInCompletion: ((Result<User, Error>) -> Void)?
+    private var isLinking: Bool = true
+    
     private override init() {}
     
     func linkGoogle(presenting: UIViewController) -> AnyPublisher<User, Error> {
@@ -68,6 +71,7 @@ final class AuthService: NSObject {
             controller.presentationContextProvider = self
             
             self.linkCompletion = promise
+            self.isLinking = true
             controller.performRequests()
         }.eraseToAnyPublisher()
     }
@@ -77,11 +81,13 @@ final class AuthService: NSObject {
             currentUser.link(with: credential) { authResult, error in
                 if let error = error as NSError? {
                     if error.code == AuthErrorCode.credentialAlreadyInUse.rawValue {
+                        print("이미 연동된 소셜 계정입니다. 현재 익명 계정을 파기하고 기존 계정으로 로그인합니다.")
                         Auth.auth().signIn(with: credential) { signInResult, signInError in
                             if let signInError = signInError {
                                 promise(.failure(signInError))
                                 return
                             }
+                            
                             if let user = signInResult?.user {
                                 promise(.success(user))
                             } else {
@@ -93,7 +99,6 @@ final class AuthService: NSObject {
                     promise(.failure(error))
                     return
                 }
-                
                 guard let user = authResult?.user else {
                     promise(.failure(AuthError.firebaseLinkFailed))
                     return
@@ -102,7 +107,8 @@ final class AuthService: NSObject {
                 let db = Firestore.firestore()
                 let data: [String: Any] = [
                     "provider": provider,
-                    "email": email ?? user.email ?? "비공개"
+                    "email": email ?? user.email ?? "비공개",
+                    "uid": user.uid
                 ]
                 db.collection("users").document(user.uid).setData(data, merge: true)
                 promise(.success(user))
@@ -122,7 +128,8 @@ final class AuthService: NSObject {
                 let db = Firestore.firestore()
                 let data: [String: Any] = [
                     "provider": provider,
-                    "email": email ?? user.email ?? "비공개"
+                    "email": email ?? user.email ?? "비공개",
+                    "uid": user.uid
                 ]
                 db.collection("users").document(user.uid).setData(data, merge: true)
                 promise(.success(user))
@@ -148,7 +155,8 @@ extension AuthService: ASAuthorizationControllerDelegate, ASAuthorizationControl
                   let appleIDToken = appleIDCredential.identityToken,
                   let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
                 
-                linkCompletion?(.failure(AuthError.appleLoginFailed))
+                let error = AuthError.appleLoginFailed
+                isLinking ? linkCompletion?(.failure(error)) : signInCompletion?(.failure(error))
                 return
             }
             
@@ -158,17 +166,40 @@ extension AuthService: ASAuthorizationControllerDelegate, ASAuthorizationControl
                 fullName: nil
             )
             
-            linkToFirebase(credential: credential,
-                           provider: "apple",
-                           email: appleIDCredential.email,
-                           promise: linkCompletion!)
+            if isLinking {
+                linkToFirebase(credential: credential,
+                               provider: "apple",
+                               email: appleIDCredential.email,
+                               promise: linkCompletion!)
+            } else {
+                Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+                    if let error = error {
+                        self?.signInCompletion?(.failure(error))
+                        return
+                    }
+                    guard let user = authResult?.user else {
+                        self?.signInCompletion?(.failure(AuthError.firebaseLinkFailed))
+                        return
+                    }
+                    
+                    let db = Firestore.firestore()
+                    let data: [String: Any] = [
+                        "provider": "apple",
+                        "email": appleIDCredential.email ?? user.email ?? "비공개",
+                        "uid": user.uid
+                    ]
+                    db.collection("users").document(user.uid).setData(data, merge: true)
+                    self?.signInCompletion?(.success(user))
+                }
+            }
             
         default:
-            linkCompletion?(.failure(AuthError.unknown))
+            let error = AuthError.unknown
+            isLinking ? linkCompletion?(.failure(error)) : signInCompletion?(.failure(error))
         }
     }
     
     func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: any Error) {
-        linkCompletion?(.failure(error))
+        isLinking ? linkCompletion?(.failure(error)) : signInCompletion?(.failure(error))
     }
 }
