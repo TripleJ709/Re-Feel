@@ -80,8 +80,31 @@ final class AddEmotionViewController: UIViewController {
     
     @objc private func saveBtnTapped() {
         view.endEditing(true)
-//        viewModel.text = addView.textView.text
-        viewModel.submit()
+        
+        let hasAgreed = UserDefaults.standard.bool(forKey: "hasAgreedToAI")
+        if hasAgreed {
+            viewModel.submit()
+        } else {
+            let alert = UIAlertController(
+                title: "AI 분석 데이터 제공 동의",
+                message: "작성하신 일기 내용은 맞춤형 위로와 명언을 제공받기 위해 제3자(OpenAI)의 AI 서비스로 전송됩니다.\n\n해당 데이터는 AI 분석 목적으로만 사용되며 안전하게 보호됩니다. 전송에 동의하시겠습니까?",
+                preferredStyle: .alert
+            )
+            
+            let agreeAction = UIAlertAction(title: "동의 및 저장", style: .default) { [weak self] _ in
+                UserDefaults.standard.set(true, forKey: "hasAgreedToAI")
+                self?.viewModel.submit()
+            }
+            
+            let cancelAction = UIAlertAction(title: "취소", style: .cancel) { [weak self] _ in
+                self?.addView.textView.becomeFirstResponder()
+            }
+            
+            alert.addAction(cancelAction)
+            alert.addAction(agreeAction)
+            
+            present(alert, animated: true)
+        }
     }
 }
 
