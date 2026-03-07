@@ -66,7 +66,7 @@ extension UIView {
         animationGroup.beginTime = CACurrentMediaTime() + delay
         animationGroup.autoreverses = true
         animationGroup.repeatCount = .infinity
-        animationGroup.isRemovedOnCompletion = false // 화면 전환 시 애니메이션이 삭제되는 현상 방지
+        animationGroup.isRemovedOnCompletion = false
         animationGroup.fillMode = .forwards
         animationGroup.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
