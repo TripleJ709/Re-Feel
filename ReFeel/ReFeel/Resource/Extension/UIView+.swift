@@ -10,11 +10,22 @@ import UIKit
 extension UIView {
     
     func setSpaceGradientBackground() {
-        if let oldLayer = layer.sublayers?.first as? CAGradientLayer {
-            oldLayer.removeFromSuperlayer()
+        if let oldLayer = layer.sublayers?.first(where: { $0.name == "spaceGradient" }) as? CAGradientLayer {
+            oldLayer.frame = bounds
+
+            if layer.sublayers?.first != oldLayer {
+                oldLayer.removeFromSuperlayer()
+                layer.insertSublayer(oldLayer, at: 0)
+            }
+            return
+        }
+        
+        if let unnamedOldLayer = layer.sublayers?.first as? CAGradientLayer, unnamedOldLayer.name == nil {
+            unnamedOldLayer.removeFromSuperlayer()
         }
         
         let gradientLayer = CAGradientLayer()
+        gradientLayer.name = "spaceGradient"
          
         let topColor = UIColor(red: 0.08, green: 0.08, blue: 0.16, alpha: 1.00)     // #14142B
         let bottomColor = UIColor(red: 0.16, green: 0.16, blue: 0.30, alpha: 1.00)  // #2A2A4E
@@ -40,7 +51,7 @@ extension UIView {
             star.backgroundColor = .white
             star.layer.cornerRadius = starSize / 2
             star.clipsToBounds = true
-            star.alpha = 0.3
+            star.alpha = 0.0
             star.layer.name = "starLayer"
             
             let screenWidth = UIScreen.main.bounds.width
@@ -51,28 +62,33 @@ extension UIView {
             
             star.frame = CGRect(x: randomX, y: randomY, width: starSize, height: starSize)
             
-            self.insertSubview(star, at: 1)
+            self.insertSubview(star, at: 0)
             
             animateStar(star)
+        }
+    
+        if let gradientLayer = self.layer.sublayers?.first(where: { $0.name == "spaceGradient" }) {
+            gradientLayer.removeFromSuperlayer()
+            self.layer.insertSublayer(gradientLayer, at: 0)
         }
     }
     
     private func animateStar(_ star: UIView) {
         let duration = Double.random(in: 1.5...3.0)
-        let delay = Double.random(in: 0.0...1.5)
+        let delay = Double.random(in: 0.0...3.0)
         
         let animationGroup = CAAnimationGroup()
         animationGroup.duration = duration
         animationGroup.beginTime = CACurrentMediaTime() + delay
         animationGroup.autoreverses = true
         animationGroup.repeatCount = .infinity
-        animationGroup.isRemovedOnCompletion = false // 화면 전환 시 애니메이션이 삭제되는 현상 방지
+        animationGroup.isRemovedOnCompletion = false
         animationGroup.fillMode = .forwards
         animationGroup.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         let opacityAnim = CABasicAnimation(keyPath: "opacity")
-        opacityAnim.fromValue = 0.3
-        opacityAnim.toValue = 1.0
+        opacityAnim.fromValue = 0.2
+        opacityAnim.toValue = 0.55
         
         let scaleAnim = CABasicAnimation(keyPath: "transform.scale")
         scaleAnim.fromValue = 1.0
