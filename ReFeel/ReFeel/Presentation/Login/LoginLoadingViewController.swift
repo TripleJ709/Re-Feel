@@ -8,8 +8,6 @@
 import UIKit
 
 final class LoginLoadingViewController: UIViewController {
-    
-    // 재시도 버튼이 눌렸을 때 외부(SceneDelegate)에 알리기 위한 클로저
     var onRetryButtonTapped: (() -> Void)?
     
     private let activityIndicator: UIActivityIndicatorView = {
@@ -41,7 +39,7 @@ final class LoginLoadingViewController: UIViewController {
         config.baseForegroundColor = .white
         
         btn.configuration = config
-        btn.isHidden = true // 처음에는 숨겨둠
+        btn.isHidden = true 
         btn.addTarget(self, action: #selector(retryTapped), for: .touchUpInside)
         return btn
     }()
@@ -77,7 +75,6 @@ final class LoginLoadingViewController: UIViewController {
         ])
     }
     
-    // 외부에서 로그인 실패를 알릴 때 호출하는 메서드
     func showFailureState(errorDescription: String) {
         activityIndicator.stopAnimating()
         activityIndicator.isHidden = true
@@ -86,7 +83,6 @@ final class LoginLoadingViewController: UIViewController {
         retryButton.isHidden = false
     }
     
-    // 외부에서 다시 로딩 상태로 되돌릴 때 호출하는 메서드
     func showLoadingState() {
         activityIndicator.isHidden = false
         activityIndicator.startAnimating()
